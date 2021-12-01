@@ -1,25 +1,25 @@
 import logo from './logo.svg';
-import './App.css';
-
+import './App.scss';
+import {AgGridReact} from 'ag-grid-react';
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const rowData = [
+    {make: "Toyota", model: "Celica", price: 35000},
+    {make: "Ford", model: "Mondeo", price: 32000},
+    {make: "Porsche", model: "Boxter", price: 72000}
+];
+
+const columnDefs = [{field:"make"},{field:"model"},{field:"price"}]
+
+return (
+  <div className="grid-container">
+    <div className="ag-theme-alpine" style={{ height: '500px', width: '100%'}}>
+        <AgGridReact
+            rowData={rowData}
+            columnDefs={columnDefs}>
+        </AgGridReact>
     </div>
-  );
+    </div>
+);
 }
 
 export default App;
