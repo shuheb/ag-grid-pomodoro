@@ -12,11 +12,56 @@
 .ag-theme-alpine {
   @include ag-theme-alpine((
       // use theme parameters where possible
-      alpine-active-color: deeppink
+      foreground-color:white,
+      background-color: rgb(69, 124, 163),
+      header-background-color: rgb(69, 124, 163),
+      odd-row-background-color: rgb(69, 124, 163)
   ));
 
   .ag-header {
       // or write CSS selectors to make customisations beyond what the parameters support
-      text-style: italic;
+      // background-color: rgb(76, 145, 149);
+      // color: white !important;
+  }
+
+  .ag-cell {
+    // background-color:  ;
+  }
+
+  .pomodoro-container {
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .pomodoro-title {
+    display: flex;
+    width:100%;
+    flex-direction: row;
+    align-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .pomodoro-title > div {
+    margin: 0px 30px;
+  }
+
+  .pomodoro-container > button  {
+    justify-content: center;
+      cursor: pointer;
+      border: none;
+      margin: 20px 0px 0px;
+      padding: 0px 12px;
+      border-radius: 4px;
+      box-shadow: rgb(235, 235, 235) 0px 6px 0px;
+      font-family: ArialRounded;
+      font-size: 22px;
+      height: 55px;
+      color: rgb(69, 124, 163);
+      font-weight: bold;
+      width: 200px;
+      background-color: white;
+      transition: color 0.5s ease-in-out 0s;
+
   }
 }
+
