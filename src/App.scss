@@ -8,8 +8,6 @@
 
 
 .p-background {
- height: 90%;
-    width: 500px;
   text-align: center;
   
 }
@@ -19,14 +17,14 @@
 }
 
 .ag-header-cell {
-  background-color: rgb(217, 85, 80);
+  // background-color: rgb(217, 85, 80);
   
 }
 .ag-header-cell-label {
-  color: white;
-  font-size: 18px;
-  text-align: center !important;
-  font-weight: bold;
+  // color: white;
+  // font-size: 18px;
+  // text-align: center !important;
+  // font-weight: bold;
 }
 
 .p-background.red {
@@ -40,6 +38,21 @@
   background-color: rgb(69, 124, 163);
 }
 
+.ag-row.red {
+  background-color: rgb(217, 85, 80);
+  
+}
+
+.red-cell {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.ag-row.green {
+  background-color: rgb(76, 145, 149);
+}
+.ag-row.blue {
+  background-color: rgb(69, 124, 163);
+}
 
 .p-container {
   background-color: rgba(255, 255, 255, 0.1);
@@ -83,15 +96,13 @@
 .p-button {
     cursor: pointer;
     border: none;
-    margin: 30px;
-    padding: 0px 12px;
+    margin: 10px;
     border-radius: 4px;
-    box-shadow: rgb(235, 235, 235) 0px 6px 0px;
     
-    font-size: 22px;
-    height: 55px;
+    font-size: 16px;
+    height: 40px;
     font-weight: bold;
-    width: 200px;
+    width: 100px;
     background-color: white;
     transition: color 0.5s ease-in-out 0s;
 

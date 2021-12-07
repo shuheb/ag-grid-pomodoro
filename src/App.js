@@ -76,43 +76,138 @@ const PomodoroCellRendererComponent = () => {
   </div>)
 }
 
+const PomodoroActionComponent = (props) => {
+  const type = props.node.data.type || 'pomodoro';
+  console.log(type)
+  const doesTaskExist = props.node.data.task
+  const [startTimer, setStartTimer] = useState(false);
+  console.log(type)
+  const [timerType, setTimerType] = useState(type)
+
+  const onClickHandler = () => {
+    setStartTimer(prev => !prev);
+
+
+  }
+
+  const button = <button className={timerType === "pomodoro" ? "p-button red" : timerType === "short_break" ? "p-button green" : "p-button blue"} onClick={onClickHandler}>{startTimer ? 'STOP' : 'START'}</button>;
+  console.log(button)
+  const userInterface = doesTaskExist ? button : null;
+  return (userInterface)
+};
+
+const PomodoroTypeComponent = props => {
+  const type = props.node.data.type || "pomodoro";
+  const doesTaskExist = props.node.data.task
+  const [timerType, setTimerType] = useState(type);
+
+
+  useEffect(() => {
+    if(type != timerType) {
+      let data = props.node.data;
+          props.node.setData({...data, type:timerType})
+    }
+  }, [timerType]);
+
+  
+
+  const uiToShow = <div className="p-title">
+  <button onClick={() => setTimerType('pomodoro')} className={timerType === "pomodoro" ? "p-title-item active" : "p-title-item"}>Pomodoro</button>
+  <button onClick={() => setTimerType('short_break')} className={timerType === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
+  <button onClick={() => setTimerType('long_break')} className={timerType === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
+</div>;
+
+const showUi = doesTaskExist ? uiToShow : null;
+
+  return (showUi)
+}
+
 function App() {
-  const rowData = [
-    { pomodoroComponent: true },
-    { make: "Porsche", model: "Boxter", price: 72000 },
-    {},
-    {}
-  ];
+  const [rowData, setRowData] = useState([
+    { id: 1,}
+  ]);
   // task name, priority, start time, end time, type of pomodoro, timer, progress
   const columnDefs = [
     {
       field: "task",
+      cellStyle: { 'color': 'gray' },
+      editable: true,
+      valueFormatter: ({ value }) => {
+        if (!value) { return 'enter value...' }
+      },
+      onCellValueChanged: params => {
+        if (params.oldValue != params.newValue) {
+          let data = params.node.data;
+          params.node.setData({...data, type:'pomodoro'})
+          // params.api.applyTransaction({update:[{...data, type:'pomodoro'}]})
+          // let newStore = rowData.map(row => {
+          //   if (row.id == params.data.id) {
+          //     return { ...row, type: 'pomodoro' }
+          //   }
+          // });
+          // setRowData(newStore);
+          // params.api.setRowData(newStore)
+
+        }
+      }
     },
     {
-      field: "action", 
+      field: "action",
+      autoHeight: true,
+      cellRendererFramework: PomodoroActionComponent
     },
     {
       field: "timer",
-    }, 
-    {
-      field:"start_time"
     },
     {
-      field:"end_time"
+      field: "start_time"
     },
-    {field:'type'},
-    {field:'progress'}
+    {
+      field: "end_time"
+    },
+    {
+      field: 'type', minWidth:350,  cellRendererFramework: PomodoroTypeComponent,
+      autoHeight:true,
+      cellClassRules: {
+        'red-cell': ({ node }) => {
+          if (node.data.type == "pomodoro") {
+            return true;
+          }
+        }
+      }
+    },
+    { field: 'progress', }
   ];
 
   const defaultColDef = { flex: 1, filter: true, sortable: true }
   return (
-    <div className="grid-container">
+    <div style={{ height: '100%', width: '100%' }}>
+      <PomodoroCellRendererComponent />
       <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           reactUi={true}
+          // immutableData={true}
+          getRowNodeId={data => data.id}
+          rowClassRules={{
+            'red': ({ node }) => {
+              if (node.data.type == "pomodoro") {
+                return true;
+              }
+            },
+            'green': ({ node }) => {
+              if (node.data.type == "short_break") {
+                return true;
+              }
+            },
+            'blue': ({ node }) => {
+              if (node.data.type == "long_break") {
+                return true;
+              }
+            }
+          }}
           // getRowHeight={params => {
 
           //  if(params.node.rowIndex == 1) {
