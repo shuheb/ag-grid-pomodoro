@@ -40,12 +40,12 @@
 
 .ag-row.red {
   background-color: rgb(217, 85, 80);
-  
+  color:white;
 }
 
-.red-cell {
+.shade-cell {
   background-color: rgba(255, 255, 255, 0.1);
-  color:white;
+  // color:white;
   font-weight: bold;
   font-size: 24px;
 }
@@ -55,9 +55,11 @@
 }
 .ag-row.green {
   background-color: rgb(76, 145, 149);
+  color:white;
 }
 .ag-row.blue {
   background-color: rgb(69, 124, 163);
+  color:white;
 }
 
 .p-container {
@@ -70,17 +72,21 @@
 }
 
 .p-title {
+
   
-  // display: flex;
-  // flex-direction: row;
-  // justify-content: space-around;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+    // height: 61px;
+    align-items: center;
+    height: 100%;
+
 }
 
 .p-timer {
-  font-size: 80px;
+  font-size: 25px;
   font-weight: bold;
-  // margin-top: 20px;
-  margin: 30px;
+  // margin: 10px;
 }
 
 .p-title-item {
@@ -99,16 +105,29 @@
 
 }
 
+.btn-container {
+  // height: 400px;
+  // width: 100%;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+    // height: 61px;
+    align-items: center;
+    height: 100%;
+}
 .p-button {
     cursor: pointer;
     border: none;
-    margin: 10px;
+    margin: 7px;
     border-radius: 4px;
     
-    font-size: 16px;
-    height: 40px;
+    font-size: 15px;
+    height: 25px;
     font-weight: bold;
-    width: 100px;
+    width: 90px;
     background-color: white;
     transition: color 0.5s ease-in-out 0s;
 
