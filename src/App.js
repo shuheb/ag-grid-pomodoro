@@ -78,7 +78,7 @@ function App() {
       valueFormatter: params => {
         // https://stackoverflow.com/questions/8888491/how-do-you-display-javascript-datetime-in-12-hour-am-pm-format
         if (params.value) {
-          const date = params.value[0];
+          const date = params.value
           var hours = date.getHours();
           var minutes = date.getMinutes();
           var ampm = hours >= 12 ? 'pm' : 'am';
@@ -92,8 +92,23 @@ function App() {
       }
     },
     {
+      headerName:'End Time',
       field: "end_time",
-      
+      valueGetter: params => {
+        if(params.data.start_time) {
+          const date = params.data.start_time;
+          date.setMinutes(date.getMinutes() + 25);
+          var hours = date.getHours();
+          var minutes = date.getMinutes();
+          var ampm = hours >= 12 ? 'pm' : 'am';
+          hours = hours % 12;
+          hours = hours ? hours : 12; // the hour '0' should be '12'
+          minutes = minutes < 10 ? `0${minutes}`: minutes;
+          // var strTime = hours + ':' + minutes + ' ' + ampm;
+          return `${hours}:${minutes} ${ampm}`;
+          // return `${}`
+        }
+      },
     },
     {
       field: 'type', minWidth: 350, cellRendererFramework: PomodoroTypeComponent,

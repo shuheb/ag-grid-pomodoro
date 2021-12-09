@@ -24,7 +24,7 @@ const PomodoroActionComponent = memo((props) => {
         } else {
             let data = props.node.data;
             let date = new Date();
-            props.node.setData({ ...data, timerStarted: true, start_time: [date] })
+            props.node.setData({ ...data, timerStarted: true, start_time: date })
         }
     }
 
