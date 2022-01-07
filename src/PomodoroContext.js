@@ -5,7 +5,6 @@ import { UPDATE_TASK_NAME, START_TIMER, STOP_TIMER, ADD_TASK, TOGGLE_TIMER, CHAN
 import { v4 as generateId } from 'uuid';
 export const PomodoroContext = createContext();
 
-
 const reducer = (state = {}, action) => {
 
     switch (action.type) {
@@ -62,16 +61,9 @@ const updateRowDataWithNewType = (rowData, id, type) => {
     return newRowData;
 }
 
-
-
 export const PomodoroProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { rowData, currentRow } = state;
-    // const grudges = state.present;
-    // const isPast = !!state.past.length;
-    // const isFuture = !!state.future.length;
-
-
 
     const startTimer = useCallback(({ id }) => {
         dispatch({
@@ -132,25 +124,6 @@ export const PomodoroProvider = ({ children }) => {
             },
         });
     }, [dispatch]);
-
-    // const toggleForgiveness = useCallback((id) => {
-    //     dispatch({
-    //         type: GRUDGE_FORGIVE,
-    //         payload: {
-    //             id
-    //         }
-    //     });
-    // }, [dispatch]);
-
-    // const undo = useCallback(() => {
-    //     dispatch({ type: UNDO });
-    // }, [dispatch])
-
-    // const redo = useCallback(() => {
-    //     dispatch({ type: REDO });
-    // }, [dispatch])
-
-    // const value = { grudges, addGrudge, toggleForgiveness, undo, isPast, isFuture, redo };
 
     const value = { rowData, currentRow, startTimer, stopTimer, updateTaskName, addTask, toggleTimer, changePomodoroType };
 

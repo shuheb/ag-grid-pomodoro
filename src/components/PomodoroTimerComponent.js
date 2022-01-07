@@ -36,7 +36,7 @@ const PomodoroTimerComponent = memo(props => {
         setSeconds(15 * 60);
         break;
       default:
-        setSeconds(5);
+        setSeconds(25 * 60);
     }
   }, [type]);
 
