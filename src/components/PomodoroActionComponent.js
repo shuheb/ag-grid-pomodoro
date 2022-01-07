@@ -3,7 +3,7 @@ import { PomodoroContext } from '../PomodoroContext';
 
 const PomodoroActionComponent = memo((props) => {
     console.log('PomodoroActionComponent')
-    const { toggleTimer } = useContext(PomodoroContext);
+    const { toggleTimer, startTimer, stopTimer } = useContext(PomodoroContext);
     const type = props.node.data.type;
     const timerStarted = props.node.data.timerStarted;
 
@@ -11,7 +11,7 @@ const PomodoroActionComponent = memo((props) => {
     return (
         <div className="btn-container">
             <button className={classNameExpression}
-                onClick={() => toggleTimer({ id: props.node.data.id })}>
+                onClick={() => timerStarted ? stopTimer({ id: props.node.data.id }) : startTimer({ id: props.node.data.id })}>
                 {timerStarted ? 'STOP' : 'START'}
             </button>
         </div>

@@ -10,7 +10,7 @@ const reducer = (state = {}, action) => {
     switch (action.type) {
         case START_TIMER:
             console.log('START_TIMER', action.payload)
-            return { ...state, rowData: toggleTimer(state.rowData, action.payload.id, true) }
+            return { ...state, rowData: startTimerOnRow(state.rowData, action.payload.id, true) }
         case STOP_TIMER:
             console.log('STOP_TIMER', action.payload)
             return { ...state, rowData: stopTimerOnRow(state.rowData, action.payload.id, false) }
@@ -35,6 +35,14 @@ const reducer = (state = {}, action) => {
             console.log('default triggered')
             return state;
     }
+}
+
+const startTimerOnRow = (rowData, id, toggle) => {
+    const newRowData = rowData.map((row) => {
+        if (row.id !== id) return row;
+        return { ...row, timerStarted: toggle, start_time: new Date() }
+    })
+    return newRowData
 }
 
 const stopTimerOnRow = (rowData, id, toggle) => {
@@ -74,13 +82,15 @@ export const PomodoroProvider = ({ children }) => {
         });
     }, [dispatch]);
 
-    const stopTimer = useCallback(({ id }) => {
-        dispatch({
-            type: STOP_TIMER,
-            payload: {
-                id
-            },
-        });
+    const stopTimer = useCallback(({ id, timerStarted }) => {
+        if (timerStarted) {
+            dispatch({
+                type: STOP_TIMER,
+                payload: {
+                    id
+                },
+            });
+        }
     }, [dispatch]);
 
     const toggleTimer = useCallback(({ id }) => {
