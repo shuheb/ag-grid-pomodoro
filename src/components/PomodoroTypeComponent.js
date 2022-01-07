@@ -1,31 +1,16 @@
-import { useState, useEffect, memo } from 'react';
+import { memo, useContext } from 'react';
+import { PomodoroContext } from '../PomodoroContext';
 
 const PomodoroTypeComponent = memo(props => {
-    const type = props.node.data.type || "pomodoro";
-    const doesTaskExist = props.node.data.task
-    const [timerType, setTimerType] = useState(type);
-  
-    
-  
-  
-    useEffect(() => {
-      if (type !== timerType) {
-        let data = props.node.data;
-        props.node.setData({ ...data, type: timerType, timerStarted: false })
-      }
-    }, [timerType]);
-  
-  
-  
-    const uiToShow = <div className="p-title">
-      <button onClick={() => setTimerType('pomodoro')} className={timerType === "pomodoro" ? "p-title-item active" : "p-title-item"}>Pomodoro</button>
-      <button onClick={() => setTimerType('short_break')} className={timerType === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
-      <button onClick={() => setTimerType('long_break')} className={timerType === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
-    </div>;
-  
-    const showUi = doesTaskExist ? uiToShow : null;
-  
-    return (showUi)
-  })
+  console.log('PomodoroTypeComponent');
+  const { changePomodoroType } = useContext(PomodoroContext);
+  const type = props.node.data.type;
 
-  export default PomodoroTypeComponent;
+  return (<div className="p-title">
+    <button onClick={() => changePomodoroType({ type: 'pomodoro', id: props.node.data.id, previous: props.node.data.type })} className={type === "pomodoro" ? "p-title-item active" : "p-title-item"}>Pomodoro</button>
+    <button onClick={() => changePomodoroType({ type: 'short_break', id: props.node.data.id, previous: props.node.data.type })} className={type === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
+    <button onClick={() => changePomodoroType({ type: 'long_break', id: props.node.data.id, previous: props.node.data.type })} className={type === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
+  </div>)
+})
+
+export default PomodoroTypeComponent;

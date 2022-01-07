@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect } from 'react';
 
 const PomodoroCellRendererComponent = () => {
   const [startTimer, setStartTimer] = useState(false);
@@ -19,7 +19,7 @@ const PomodoroCellRendererComponent = () => {
     return () => {
       if (timer) { clearInterval(timer); };
     }
-  }, [startTimer]);
+  }, [startTimer, seconds]);
 
   useEffect(() => {
     if (seconds === 0) {

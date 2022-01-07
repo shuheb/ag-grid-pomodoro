@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { PomodoroProvider } from './PomodoroContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <PomodoroProvider>
+      <App />
+    </PomodoroProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

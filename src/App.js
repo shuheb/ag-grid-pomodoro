@@ -1,5 +1,5 @@
 
-import { useState, useEffect, memo } from 'react';
+import { useContext } from 'react';
 import './App.scss';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -7,19 +7,16 @@ import PomodoroActionComponent from './components/PomodoroActionComponent';
 import PomodoroTypeComponent from './components/PomodoroTypeComponent';
 import PomodoroTimerComponent from './components/PomodoroTimerComponent';
 import PomodoroCellRendererComponent from './components/PomodoroCellRendererComponent';
-// TO DO: restructure the grid into the following columns:
-// task name, priority, start time, end time, type of pomodoro, timer, progress, 
+import { PomodoroContext } from './PomodoroContext';
+import StatusBar from './components/StatusBar';
+import 'ag-grid-enterprise';
 
-// TO DO:
-// use context: show the current pomodoro task as a timer 
-// theming 
+function App(props) {
+  const { rowData, updateTaskName } = useContext(PomodoroContext);
 
-function App() {
-  const [rowData, setRowData] = useState([
-    { id: 1, timerStarted: false }
-  ]);
   // task name, priority, start time, end time, type of pomodoro, timer, progress
   const columnDefs = [
+    { field: 'id' },
     {
       field: "task",
       editable: true,
@@ -42,23 +39,22 @@ function App() {
       },
       onCellValueChanged: params => {
         if (params.oldValue !== params.newValue) {
-          let data = params.node.data;
-          params.node.setData({ ...data, type: 'pomodoro' })
-          // params.api.applyTransaction({update:[{...data, type:'pomodoro'}]})
-          // let newStore = rowData.map(row => {
-          //   if (row.id == params.data.id) {
-          //     return { ...row, type: 'pomodoro' }
-          //   }
-          // });
-          // setRowData(newStore);
-          // params.api.setRowData(newStore)
-
+          updateTaskName({ id: params.data.id, task: params.newValue })
         }
       }
     },
     {
       field: "action",
-      // autoHeight: true,
+      cellRendererSelector: ({ data }) => {
+        const actionComponent = {
+          frameworkComponent: PomodoroActionComponent
+        };
+        if (data.task) {
+          return actionComponent;
+        }
+
+        return undefined;
+      },
       cellClassRules: {
         'shade-cell': ({ node }) => {
           if (node.data.type === "pomodoro" || node.data.type === "short_break" || node.data.type === "long_break") {
@@ -66,53 +62,70 @@ function App() {
           }
         },
       },
-      cellRendererFramework: PomodoroActionComponent
     },
     {
       field: "timer",
-      cellRendererFramework: PomodoroTimerComponent
-    },
-    {
-      headerName: "Start Time",
-      field: "start_time",
-      valueFormatter: params => {
-        // https://stackoverflow.com/questions/8888491/how-do-you-display-javascript-datetime-in-12-hour-am-pm-format
-        if (params.value) {
-          const date = params.value
-          var hours = date.getHours();
-          var minutes = date.getMinutes();
-          var ampm = hours >= 12 ? 'pm' : 'am';
-          hours = hours % 12;
-          hours = hours ? hours : 12; // the hour '0' should be '12'
-          minutes = minutes < 10 ? `0${minutes}`: minutes;
-          // var strTime = hours + ':' + minutes + ' ' + ampm;
-          return `${hours}:${minutes} ${ampm}`;
-          // return `${}`
+      cellRendererSelector: ({ data }) => {
+        const timerComponent = {
+          frameworkComponent: PomodoroTimerComponent
+        };
+        if (data.task) {
+          return timerComponent;
         }
-      }
-    },
-    {
-      headerName:'End Time',
-      field: "end_time",
-      valueGetter: params => {
-        if(params.data.start_time) {
-          const date = params.data.start_time;
-          date.setMinutes(date.getMinutes() + 25);
-          var hours = date.getHours();
-          var minutes = date.getMinutes();
-          var ampm = hours >= 12 ? 'pm' : 'am';
-          hours = hours % 12;
-          hours = hours ? hours : 12; // the hour '0' should be '12'
-          minutes = minutes < 10 ? `0${minutes}`: minutes;
-          // var strTime = hours + ':' + minutes + ' ' + ampm;
-          return `${hours}:${minutes} ${ampm}`;
-          // return `${}`
-        }
+
+        return undefined;
       },
     },
+    // {
+    //   headerName: "Start Time",
+    //   field: "start_time",
+    //   valueFormatter: params => {
+    //     // https://stackoverflow.com/questions/8888491/how-do-you-display-javascript-datetime-in-12-hour-am-pm-format
+    //     if (params.value) {
+    //       const date = params.value
+    //       var hours = date.getHours();
+    //       var minutes = date.getMinutes();
+    //       var ampm = hours >= 12 ? 'pm' : 'am';
+    //       hours = hours % 12;
+    //       hours = hours ? hours : 12; // the hour '0' should be '12'
+    //       minutes = minutes < 10 ? `0${minutes}`: minutes;
+    //       // var strTime = hours + ':' + minutes + ' ' + ampm;
+    //       return `${hours}:${minutes} ${ampm}`;
+    //       // return `${}`
+    //     }
+    //   }
+    // },
+    // {
+    //   headerName:'End Time',
+    //   field: "end_time",
+    //   valueGetter: params => {
+    //     if(params.data.start_time) {
+    //       const date = params.data.start_time;
+    //       date.setMinutes(date.getMinutes() + 25);
+    //       var hours = date.getHours();
+    //       var minutes = date.getMinutes();
+    //       var ampm = hours >= 12 ? 'pm' : 'am';
+    //       hours = hours % 12;
+    //       hours = hours ? hours : 12; // the hour '0' should be '12'
+    //       minutes = minutes < 10 ? `0${minutes}`: minutes;
+    //       // var strTime = hours + ':' + minutes + ' ' + ampm;
+    //       return `${hours}:${minutes} ${ampm}`;
+    //       // return `${}`
+    //     }
+    //   },
+    // },
     {
-      field: 'type', minWidth: 350, cellRendererFramework: PomodoroTypeComponent,
-      // autoHeight: true,
+      field: 'type', minWidth: 350, 
+      cellRendererSelector: ({ data }) => {
+        const typeComponent = {
+          frameworkComponent: PomodoroTypeComponent
+        };
+        if (data.task) {
+          return typeComponent;
+        }
+
+        return undefined;
+      },
       cellClassRules: {
         'shade-cell': ({ node }) => {
           if (node.data.type === "pomodoro" || node.data.type === "short_break" || node.data.type === "long_break") {
@@ -124,17 +137,20 @@ function App() {
     { field: 'progress', }
   ];
 
-  const defaultColDef = { flex: 1, filter: true, sortable: true }
+  const defaultColDef = { flex: 1, filter: true, sortable: true };
+
   return (
-    <div style={{ height: '100%', width: '100%' }}>
+    <div style={{ height: '60%', width: '100%' }}>
       <PomodoroCellRendererComponent />
+      <button onClick={() => console.log(rowData)}>log out data from store</button>
       <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
         <AgGridReact
-          rowData={rowData}
+          rowData={rowData.map((it) => ({ ...it }))}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           reactUi={true}
-          // immutableData={true}
+          immutableData={true}
+
           getRowNodeId={data => data.id}
           rowClassRules={{
             'red': ({ node }) => {
@@ -161,6 +177,21 @@ function App() {
           // }}
           frameworkComponents={{
             'pomodoroComponent': PomodoroCellRendererComponent
+          }}
+          statusBar={{
+            statusPanels: [
+              {
+                statusPanelFramework: StatusBar,
+                key: 'statusBarKey',
+                align: 'left'
+              },
+              {
+                statusPanel: 'agAggregationComponent',
+                statusPanelParams: {
+                  aggFuncs: ['count', 'sum'],
+                },
+              },
+            ]
           }}
         >
         </AgGridReact>
