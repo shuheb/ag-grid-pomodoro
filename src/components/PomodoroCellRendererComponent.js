@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { PomodoroContext } from '../PomodoroContext';
 
 const PomodoroCellRendererComponent = () => {
   const [startTimer, setStartTimer] = useState(false);
   const [seconds, setSeconds] = useState(60);
   const [timerType, setTimerType] = useState("pomodoro")
+  const {rowData, currentRow} = useContext(PomodoroContext);
 
   useEffect(() => {
     let timer;
@@ -57,6 +59,8 @@ const PomodoroCellRendererComponent = () => {
         <button onClick={() => setTimerType('short_break')} className={timerType === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
         <button onClick={() => setTimerType('long_break')} className={timerType === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
       </div>
+      <div>current ID: {JSON.stringify(currentRow)}</div>
+      {/* <div>rowData: {JSON.stringify(rowData)}</div> */}
       <div className="p-timer">{timerString}</div>
 
       <div>

@@ -1,7 +1,7 @@
 import initialState from "./initialState";
 import { useReducer, createContext, useCallback } from 'react';
 
-import { UPDATE_TASK_NAME, START_TIMER, STOP_TIMER, ADD_TASK, TOGGLE_TIMER, CHANGE_POMODORO_TYPE } from "./ActionCreators";
+import { UPDATE_TASK_NAME, START_TIMER, STOP_TIMER, ADD_TASK, TOGGLE_TIMER, CHANGE_POMODORO_TYPE, UPDATE_CURRENT_TIMER, DISABLE_TIMER_ON_OTHER_ROWS} from "./ActionCreators";
 import { v4 as generateId } from 'uuid';
 export const PomodoroContext = createContext();
 
@@ -29,14 +29,26 @@ const reducer = (state = {}, action) => {
             return { ...state, rowData: newRowData };
         case CHANGE_POMODORO_TYPE:
             console.log('CHANGE_POMODORO_TYPE', action.payload);
-
             return { ...state, rowData: updateRowDataWithNewType(state.rowData, action.payload.id, action.payload.type) };
+        case UPDATE_CURRENT_TIMER:
+            console.log('UPDATE_CURRENT_TIMER', action.payload.id);
+            return {...state, currentRow: action.payload.id }
+        case DISABLE_TIMER_ON_OTHER_ROWS:
+            console.log('DISABLE_TIMER_ON_OTHER_ROWS', action.payload);
+            return {...state, rowData: stopTimerOnOtherRows(state.rowData, action.payload.id)};
         default:
             console.log('default triggered')
             return state;
     }
 }
-
+const stopTimerOnOtherRows = (rowData, id) => {
+    const newRowData = rowData.map(row => {
+        if(row.id === id) return row;
+        if(row.timerStarted) return {...row, timerStarted: false};
+        return row;
+    });
+    return newRowData
+};
 const startTimerOnRow = (rowData, id, toggle) => {
     const newRowData = rowData.map((row) => {
         if (row.id !== id) return row;
@@ -65,7 +77,7 @@ const updateRowDataWithNewType = (rowData, id, type) => {
     const newRowData = rowData.map((row) => {
         if (row.id !== id) return row;
         return { ...row, type }
-    })
+    });
     return newRowData;
 }
 
@@ -73,13 +85,31 @@ export const PomodoroProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { rowData, currentRow } = state;
 
-    const startTimer = useCallback(({ id }) => {
-        dispatch({
-            type: START_TIMER,
-            payload: {
-                id
-            },
-        });
+    console.log(state)
+
+    const startTimer = useCallback(({ id, timerStarted }) => {
+        if (!timerStarted) {
+            dispatch({
+                type: START_TIMER,
+                payload: {
+                    id
+                },
+            });
+
+            dispatch({
+                type: DISABLE_TIMER_ON_OTHER_ROWS,
+                payload: {
+                    id
+                }
+            })
+
+            dispatch({
+                type: UPDATE_CURRENT_TIMER,
+                payload: {
+                    id
+                }
+            });
+        }
     }, [dispatch]);
 
     const stopTimer = useCallback(({ id, timerStarted }) => {
