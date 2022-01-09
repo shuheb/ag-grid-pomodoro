@@ -11,7 +11,7 @@ const PomodoroActionComponent = memo((props) => {
     return (
         <div className="btn-container">
             <button className={classNameExpression}
-                onClick={() => timerStarted ? stopTimer({ id: props.node.data.id }) : startTimer({ id: props.node.data.id })}>
+                onClick={() => timerStarted ? stopTimer({ id: props.node.data.id, timerStarted }) : startTimer({ id: props.node.data.id, timerStarted })}>
                 {timerStarted ? 'STOP' : 'START'}
             </button>
         </div>
