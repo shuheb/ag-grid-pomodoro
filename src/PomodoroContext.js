@@ -32,7 +32,7 @@ const reducer = (state = {}, action) => {
             return { ...state, rowData: updateRowDataWithNewType(state.rowData, action.payload.id, action.payload.type) };
         case UPDATE_CURRENT_TIMER:
             console.log('UPDATE_CURRENT_TIMER', action.payload.id);
-            return {...state, currentRow: action.payload.id }
+            return {...state, currentRow: state.rowData.filter(row => row.id === action.payload.id) }
         case DISABLE_TIMER_ON_OTHER_ROWS:
             console.log('DISABLE_TIMER_ON_OTHER_ROWS', action.payload);
             return {...state, rowData: stopTimerOnOtherRows(state.rowData, action.payload.id)};
