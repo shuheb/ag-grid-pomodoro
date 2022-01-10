@@ -10,10 +10,11 @@ import PomodoroCellRendererComponent from './components/PomodoroCellRendererComp
 import { PomodoroContext } from './PomodoroContext';
 import StatusBar from './components/StatusBar';
 import 'ag-grid-enterprise';
+import { ThemeContext } from './ThemeContext';
 
 function App(props) {
   const { rowData, updateTaskName } = useContext(PomodoroContext);
-
+  const themes = useContext(ThemeContext);
   // task name, priority, start time, end time, type of pomodoro, timer, progress
   const columnDefs = [
     { field: 'id' },
@@ -88,16 +89,16 @@ function App(props) {
           var ampm = hours >= 12 ? 'pm' : 'am';
           hours = hours % 12;
           hours = hours ? hours : 12; // the hour '0' should be '12'
-          minutes = minutes < 10 ? `0${minutes}`: minutes;
+          minutes = minutes < 10 ? `0${minutes}` : minutes;
           return `${hours}:${minutes} ${ampm}`;
         }
       }
     },
     {
-      headerName:'End Time',
+      headerName: 'End Time',
       field: "end_time",
       valueGetter: params => {
-        if(params.data.start_time) {
+        if (params.data.start_time) {
           const date = params.data.start_time;
           const newDate = new Date(date);
           newDate.setMinutes(date.getMinutes() + 25);
@@ -106,13 +107,13 @@ function App(props) {
           var ampm = hours >= 12 ? 'pm' : 'am';
           hours = hours % 12;
           hours = hours ? hours : 12; // the hour '0' should be '12'
-          minutes = minutes < 10 ? `0${minutes}`: minutes;
+          minutes = minutes < 10 ? `0${minutes}` : minutes;
           return `${hours}:${minutes} ${ampm}`;
         }
       },
     },
     {
-      field: 'type', minWidth: 350, 
+      field: 'type', minWidth: 350,
       cellRendererSelector: ({ data }) => {
         const typeComponent = {
           frameworkComponent: TypeComponent
@@ -136,6 +137,45 @@ function App(props) {
 
   const defaultColDef = { flex: 1, filter: true, sortable: true };
 
+  const getRowStyle = params => {
+    const { type } = params.data;
+    const { background, foreground } = themes[type];
+    switch (type) {
+      case 'pomodoro': {
+        return { backgroundColor: background, color: foreground }
+      };
+      case 'short_break': {
+        return { backgroundColor: background, color: foreground }
+      };
+      case 'long_break': {
+        return { backgroundColor: background, color: foreground }
+      };
+      default: {
+        console.log('default getRowStyle');
+        return;
+      }
+    }
+
+  }
+
+  const rowClassRules = {
+    'red': ({ node }) => {
+      if (node.data.type === "pomodoro") {
+        return true;
+      }
+    },
+    'green': ({ node }) => {
+      if (node.data.type === "short_break") {
+        return true;
+      }
+    },
+    'blue': ({ node }) => {
+      if (node.data.type === "long_break") {
+        return true;
+      }
+    }
+  }
+
   return (
     <div style={{ height: '60%', width: '100%' }}>
       <PomodoroCellRendererComponent />
@@ -147,25 +187,9 @@ function App(props) {
           defaultColDef={defaultColDef}
           reactUi={true}
           immutableData={true}
-
+          getRowStyle={getRowStyle}
           getRowNodeId={data => data.id}
-          rowClassRules={{
-            'red': ({ node }) => {
-              if (node.data.type === "pomodoro") {
-                return true;
-              }
-            },
-            'green': ({ node }) => {
-              if (node.data.type === "short_break") {
-                return true;
-              }
-            },
-            'blue': ({ node }) => {
-              if (node.data.type === "long_break") {
-                return true;
-              }
-            }
-          }}
+          // rowClassRules={rowClassRules}
           // getRowHeight={params => {
 
           //  if(params.node.rowIndex == 1) {
