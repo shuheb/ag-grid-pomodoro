@@ -1,9 +1,9 @@
 import { memo, useContext } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
 
-const PomodoroActionComponent = memo((props) => {
-    console.log('PomodoroActionComponent')
-    const { toggleTimer, startTimer, stopTimer } = useContext(PomodoroContext);
+const ActionComponent = memo((props) => {
+    console.log('ActionComponent')
+    const { startTimer, stopTimer } = useContext(PomodoroContext);
     const type = props.node.data.type;
     const timerStarted = props.node.data.timerStarted;
 
@@ -19,4 +19,4 @@ const PomodoroActionComponent = memo((props) => {
 });
 
 
-export default PomodoroActionComponent;
+export default ActionComponent;

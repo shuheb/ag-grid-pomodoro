@@ -3,9 +3,9 @@ import { useContext } from 'react';
 import './App.scss';
 
 import { AgGridReact } from 'ag-grid-react';
-import PomodoroActionComponent from './components/PomodoroActionComponent';
-import PomodoroTypeComponent from './components/PomodoroTypeComponent';
-import PomodoroTimerComponent from './components/PomodoroTimerComponent';
+import ActionComponent from './components/ActionComponent';
+import TypeComponent from './components/TypeComponent';
+import TimerComponent from './components/TimerComponent';
 import PomodoroCellRendererComponent from './components/PomodoroCellRendererComponent';
 import { PomodoroContext } from './PomodoroContext';
 import StatusBar from './components/StatusBar';
@@ -47,7 +47,7 @@ function App(props) {
       field: "action",
       cellRendererSelector: ({ data }) => {
         const actionComponent = {
-          frameworkComponent: PomodoroActionComponent
+          frameworkComponent: ActionComponent
         };
         if (data.task) {
           return actionComponent;
@@ -67,7 +67,7 @@ function App(props) {
       field: "timer",
       cellRendererSelector: ({ data }) => {
         const timerComponent = {
-          frameworkComponent: PomodoroTimerComponent
+          frameworkComponent: TimerComponent
         };
         if (data.task) {
           return timerComponent;
@@ -115,7 +115,7 @@ function App(props) {
       field: 'type', minWidth: 350, 
       cellRendererSelector: ({ data }) => {
         const typeComponent = {
-          frameworkComponent: PomodoroTypeComponent
+          frameworkComponent: TypeComponent
         };
         if (data.task) {
           return typeComponent;

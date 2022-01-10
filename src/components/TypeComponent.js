@@ -1,8 +1,8 @@
 import { memo, useContext } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
 
-const PomodoroTypeComponent = memo(props => {
-  console.log('PomodoroTypeComponent');
+const TypeComponent = memo(props => {
+  console.log('TypeComponent');
   const { changePomodoroType, stopTimer } = useContext(PomodoroContext);
   const type = props.node.data.type;
 
@@ -25,4 +25,4 @@ const PomodoroTypeComponent = memo(props => {
   </div>)
 })
 
-export default PomodoroTypeComponent;
+export default TypeComponent;
