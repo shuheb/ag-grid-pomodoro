@@ -1,12 +1,14 @@
 import { useState, useEffect, useContext } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
+import { ThemeContext } from '../ThemeContext';
 
 const PomodoroCellRendererComponent = () => {
   const [startTimer, setStartTimer] = useState(false);
   const [seconds, setSeconds] = useState(60);
   const [timerType, setTimerType] = useState("pomodoro")
-  const {rowData, currentRow} = useContext(PomodoroContext);
-
+  const { rowData, currentRow } = useContext(PomodoroContext);
+  const themes = useContext(ThemeContext);
+  const { type } = currentRow;
   useEffect(() => {
     let timer;
     if (startTimer && seconds > 0) {
@@ -51,8 +53,8 @@ const PomodoroCellRendererComponent = () => {
   const timerString = `${minutesToShow}:${secondsToShow}`;
 
 
-
-  return (<div className={timerType === "pomodoro" ? "p-background red" : timerType === "short_break" ? "p-background green" : "p-background blue"} >
+  // className={timerType === "pomodoro" ? "p-background red" : timerType === "short_break" ? "p-background green" : "p-background blue"}
+  return (Object.keys(currentRow).length > 0 && <div className="p-background" style={{ backgroundColor: themes[type] ? themes[type].background : '' }} >
     <div className="p-container">
       <div className="p-title">
         <button onClick={() => setTimerType('pomodoro')} className={timerType === "pomodoro" ? "p-title-item active" : "p-title-item"}>Pomodoro</button>
