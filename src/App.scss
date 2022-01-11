@@ -9,7 +9,28 @@
 
 .p-background {
   text-align: center;
-  
+  display: flex;
+  justify-content: center;
+}
+
+.p-container {
+  background-color: rgba(255, 255, 255, 0.1);
+    padding: 30px 20px;
+    border-radius: 6px;
+    color:white;
+    margin: 60px;
+    max-width: 620px;
+}
+
+.p-title {
+  padding-bottom: 10px;
+  // display: flex;
+  // flex-direction: row;
+  // justify-content: space-around;
+    // height: 61px;
+    // align-items: center;
+    // height: 100%;
+
 }
 
 .ag-cell {
@@ -38,6 +59,8 @@
   background-color: rgb(69, 124, 163);
 }
 
+
+
 // .ag-row.red {
 //   background-color: rgb(217, 85, 80);
 //   color:white;
@@ -62,26 +85,9 @@
 //   color:white;
 // }
 
-.p-container {
-  background-color: rgba(255, 255, 255, 0.1);
-    padding: 20px 0px 30px;
-    border-radius: 6px;
-    color:white;
-    margin: 20px;
-    max-width: 620px;
-}
 
-.p-title {
 
-  
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-    // height: 61px;
-    align-items: center;
-    height: 100%;
 
-}
 
 .p-timer {
   font-size: 25px;

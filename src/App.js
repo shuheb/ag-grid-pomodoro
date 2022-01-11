@@ -3,9 +3,9 @@ import { useContext } from 'react';
 import './App.scss';
 
 import { AgGridReact } from 'ag-grid-react';
-import ActionComponent from './components/ActionComponent';
-import TypeComponent from './components/TypeComponent';
-import TimerComponent from './components/TimerComponent';
+import ActionCellRenderer from './components/ActionCellRenderer';
+import TypeCellRenderer from './components/TypeCellRenderer';
+import TimerCellRenderer from './components/TimerCellRenderer';
 import PomodoroCellRendererComponent from './components/PomodoroCellRendererComponent';
 import { PomodoroContext } from './PomodoroContext';
 import StatusBar from './components/StatusBar';
@@ -47,14 +47,7 @@ function App(props) {
     {
       field: "action",
       cellRendererSelector: ({ data }) => {
-        const actionComponent = {
-          frameworkComponent: ActionComponent
-        };
-        if (data.task) {
-          return actionComponent;
-        }
-
-        return undefined;
+        return data.task ? { frameworkComponent: ActionCellRenderer } : undefined;
       },
       cellClassRules: {
         'shade-cell': ({ node }) => {
@@ -67,14 +60,7 @@ function App(props) {
     {
       field: "timer",
       cellRendererSelector: ({ data }) => {
-        const timerComponent = {
-          frameworkComponent: TimerComponent
-        };
-        if (data.task) {
-          return timerComponent;
-        }
-
-        return undefined;
+        return data.task ? { frameworkComponent: TimerCellRenderer } : undefined;
       },
     },
     {
@@ -115,14 +101,7 @@ function App(props) {
     {
       field: 'type', minWidth: 350,
       cellRendererSelector: ({ data }) => {
-        const typeComponent = {
-          frameworkComponent: TypeComponent
-        };
-        if (data.task) {
-          return typeComponent;
-        }
-
-        return undefined;
+        return data.task ? { frameworkComponent: TypeCellRenderer } : undefined;
       },
       cellClassRules: {
         'shade-cell': ({ node }) => {
@@ -179,7 +158,6 @@ function App(props) {
   return (
     <div style={{ height: '60%', width: '100%' }}>
       <PomodoroCellRendererComponent />
-      <button onClick={() => console.log(rowData)}>log out data from store</button>
       <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
         <AgGridReact
           rowData={rowData.map((it) => ({ ...it }))}
