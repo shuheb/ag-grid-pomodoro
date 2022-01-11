@@ -117,8 +117,7 @@ export const PomodoroProvider = ({ children }) => {
 
     console.log(state)
 
-    const startTimer = useCallback(({ id, timerStarted }) => {
-        if (!timerStarted) {
+    const startTimer = useCallback(({ id }) => {
             dispatch({
                 type: START_TIMER,
                 payload: {
@@ -139,10 +138,9 @@ export const PomodoroProvider = ({ children }) => {
                     id
                 }
             });
-        }
     }, [dispatch]);
 
-    const stopTimer = useCallback(({ id, timerStarted }) => {
+    const stopTimer = useCallback(({ id }) => {
         dispatch({
             type: STOP_TIMER,
             payload: {
