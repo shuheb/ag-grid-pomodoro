@@ -1,6 +1,7 @@
 import { memo, useContext } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
 import { ThemeContext } from '../ThemeContext';
+import ActionComponent from './ActionComponent';
 
 const ActionCellRenderer = memo((props) => {
     // console.log('ActionCellRenderer')
@@ -8,14 +9,9 @@ const ActionCellRenderer = memo((props) => {
     const themes = useContext(ThemeContext);
     const type = props.node.data.type;
     const { background } = themes[type]
-    const timerStarted = props.node.data.timerStarted;
+    const {timerStarted, id } = props.node.data;
     return (
-        <div className="btn-container" >
-            <button className="p-button" style={{color: background}}
-                onClick={() => timerStarted ? stopTimer({ id: props.node.data.id }) : startTimer({ id: props.node.data.id, timerStarted })}>
-                {timerStarted ? 'STOP' : 'START'}
-            </button>
-        </div>
+       <ActionComponent timerStarted={timerStarted} id={id} background={background} startTimer={startTimer} stopTimer={stopTimer} />
     )
 });
 
