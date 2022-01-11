@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, memo } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
 import { ThemeContext } from '../ThemeContext';
 
@@ -8,53 +8,28 @@ const PomodoroCellRendererComponent = () => {
   const [timerType, setTimerType] = useState("pomodoro")
   const { rowData, currentRow } = useContext(PomodoroContext);
   const themes = useContext(ThemeContext);
-  const { type } = currentRow;
-  useEffect(() => {
-    let timer;
-    if (startTimer && seconds > 0) {
-      timer = setInterval(() => {
-        setSeconds(prev => prev - 1);
-        if (seconds < 0) {
-          console.log('clear timer')
-        }
-      }, 1000);
-    }
-
-    return () => {
-      if (timer) { clearInterval(timer); };
-    }
-  }, [startTimer, seconds]);
+  const [rowInfo, setRowInfo] = useState(null);
+  const { type, timeLeft } = rowInfo || '';
 
   useEffect(() => {
-    if (seconds === 0) {
-      setStartTimer(false);
+    if (currentRow !== -1) {
+      setRowInfo(rowData.filter(row => row.id === currentRow)[0])
     }
-  }, [seconds]);
+  }, [currentRow, rowData])
 
-  useEffect(() => {
-    switch (timerType) {
-      case 'short_break':
-        setSeconds(5 * 60);
-        break;
-      case 'long_break':
-        setSeconds(15 * 60);
-        break;
-      default:
-        setSeconds(25 * 60);
-    }
-  }, [timerType]);
+
 
   const onClickHandler = () => {
     setStartTimer(prev => !prev);
   }
 
-  const secondsToShow = (seconds % 60) < 10 ? `0${seconds % 60}` : seconds % 60;
-  const minutesToShow = Math.floor(seconds / 60) < 10 ? `0${Math.floor(seconds / 60)}` : Math.floor(seconds / 60);
+  const secondsToShow = (timeLeft % 60) < 10 ? `0${timeLeft % 60}` : timeLeft % 60;
+  const minutesToShow = Math.floor(timeLeft / 60) < 10 ? `0${Math.floor(timeLeft / 60)}` : Math.floor(timeLeft / 60);
   const timerString = `${minutesToShow}:${secondsToShow}`;
 
 
   // className={timerType === "pomodoro" ? "p-background red" : timerType === "short_break" ? "p-background green" : "p-background blue"}
-  return (Object.keys(currentRow).length > 0 && <div className="p-background" style={{ backgroundColor: themes[type] ? themes[type].background : '' }} >
+  return (currentRow !== -1 && <div className="p-background" style={{ backgroundColor: themes[type] ? themes[type].background : '' }} >
     <div className="p-container">
       <div className="p-title">
         <button onClick={() => setTimerType('pomodoro')} className={timerType === "pomodoro" ? "p-title-item active" : "p-title-item"}>Pomodoro</button>

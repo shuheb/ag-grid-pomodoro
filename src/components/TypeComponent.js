@@ -2,7 +2,7 @@ import { memo, useContext } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
 
 const TypeComponent = memo(props => {
-  console.log('TypeComponent');
+  // console.log('TypeComponent');
   const { changePomodoroType, stopTimer } = useContext(PomodoroContext);
   const type = props.node.data.type;
 
@@ -15,7 +15,6 @@ const TypeComponent = memo(props => {
     } else {
       changePomodoroType({ type: 'pomodoro', id: props.node.data.id, previous: props.node.data.type })
     }
-    stopTimer({ id: props.node.data.id, timerStarted: props.node.data.timerStarted });
   }
 
   return (<div className="p-title">

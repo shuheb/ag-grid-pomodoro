@@ -3,7 +3,7 @@ import { PomodoroContext } from '../PomodoroContext';
 import { ThemeContext } from '../ThemeContext';
 
 const ActionComponent = memo((props) => {
-    console.log('ActionComponent')
+    // console.log('ActionComponent')
     const { startTimer, stopTimer } = useContext(PomodoroContext);
     const themes = useContext(ThemeContext);
     const type = props.node.data.type;
@@ -12,7 +12,7 @@ const ActionComponent = memo((props) => {
     return (
         <div className="btn-container" >
             <button className="p-button" style={{color: background}}
-                onClick={() => timerStarted ? stopTimer({ id: props.node.data.id, timerStarted }) : startTimer({ id: props.node.data.id, timerStarted })}>
+                onClick={() => timerStarted ? stopTimer({ id: props.node.data.id }) : startTimer({ id: props.node.data.id, timerStarted })}>
                 {timerStarted ? 'STOP' : 'START'}
             </button>
         </div>

@@ -3,45 +3,29 @@ import { PomodoroContext } from '../PomodoroContext';
 
 const TimerComponent = memo(props => {
   console.log('TimerComponent');
-  const { stopTimer } = useContext(PomodoroContext);
-  const { node } = props;
-  const timerStarted = node.data.timerStarted;
-  const type = node.data.type;
-  const [seconds, setSeconds] = useState();
-
+  const { stopTimer, decrementTimeLeft } = useContext(PomodoroContext);
+  const { id, timerStarted, timeLeft } = props.node.data;
+  
   useEffect(() => {
     let timer;
-    if (seconds === 0) {
-      stopTimer({ id: node.data.id });
+    console.log('USE EFFECT')
+    if (timeLeft === 0) {
+      stopTimer({ id });
     }
-    else if (timerStarted && seconds > 0) {
-      console.log('timer', seconds)
-      timer = setInterval(() => {
-
-        setSeconds(prev => prev - 1);
+    else if (timerStarted && timeLeft > 0) {
+      console.log('else if block')
+      timer = setTimeout(() => {
+        decrementTimeLeft({id})
       }, 1000);
     }
 
     return () => {
-      if (timer) { clearInterval(timer); };
+      if (timer) { clearTimeout(timer); };
     }
-  }, [timerStarted, seconds, node.data.id, stopTimer]);
+  }, [timerStarted, timeLeft, id, stopTimer]);
 
-  useEffect(() => {
-    switch (type) {
-      case 'short_break':
-        setSeconds(5 * 60);
-        break;
-      case 'long_break':
-        setSeconds(15 * 60);
-        break;
-      default:
-        setSeconds(25 * 60);
-    }
-  }, [type]);
-
-  const secondsToShow = (seconds % 60) < 10 ? `0${seconds % 60}` : seconds % 60;
-  const minutesToShow = Math.floor(seconds / 60) < 10 ? `0${Math.floor(seconds / 60)}` : Math.floor(seconds / 60);
+  const secondsToShow = (timeLeft % 60) < 10 ? `0${timeLeft % 60}` : timeLeft % 60;
+  const minutesToShow = Math.floor(timeLeft / 60) < 10 ? `0${Math.floor(timeLeft / 60)}` : Math.floor(timeLeft / 60);
 
   return (<div className="p-timer">{`${minutesToShow}:${secondsToShow}`}</div>)
 });
