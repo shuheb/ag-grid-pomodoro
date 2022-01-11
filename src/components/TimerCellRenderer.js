@@ -1,8 +1,8 @@
 import { useState, useEffect, memo, useContext } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
 
-const TimerComponent = memo(props => {
-  console.log('TimerComponent');
+const TimerCellRenderer = memo(props => {
+  console.log('TimerCellRenderer');
   const { stopTimer, decrementTimeLeft } = useContext(PomodoroContext);
   const { id, timerStarted, timeLeft } = props.node.data;
   
@@ -30,4 +30,4 @@ const TimerComponent = memo(props => {
   return (<div className="p-timer">{`${minutesToShow}:${secondsToShow}`}</div>)
 });
 
-export default TimerComponent;
+export default TimerCellRenderer;

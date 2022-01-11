@@ -2,8 +2,8 @@ import { memo, useContext } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
 import { ThemeContext } from '../ThemeContext';
 
-const ActionComponent = memo((props) => {
-    // console.log('ActionComponent')
+const ActionCellRenderer = memo((props) => {
+    // console.log('ActionCellRenderer')
     const { startTimer, stopTimer } = useContext(PomodoroContext);
     const themes = useContext(ThemeContext);
     const type = props.node.data.type;
@@ -19,5 +19,4 @@ const ActionComponent = memo((props) => {
     )
 });
 
-
-export default ActionComponent;
+export default ActionCellRenderer;
