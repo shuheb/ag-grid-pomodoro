@@ -3,15 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { PomodoroProvider } from './PomodoroContext';
-import { ThemeProvider } from './ThemeContext';
 ReactDOM.render(
   <React.StrictMode>
-  <ThemeProvider>
-    <PomodoroProvider>
       <App />
-    </PomodoroProvider>
-    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

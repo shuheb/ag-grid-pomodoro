@@ -1,9 +1,8 @@
 import React, { useContext, } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
 
-const StatusBar = () => {
+const StatusBar = (props) => {
     const { addTask } = useContext(PomodoroContext)
-
     return (
 
         <div className="ag-status-name-value">

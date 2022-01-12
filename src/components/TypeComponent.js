@@ -1,4 +1,7 @@
-const TypeComponent = ({ id, type, changePomodoroType }) => {
+import { memo } from "react"
+
+const TypeComponent = memo(({ id, type, changePomodoroType }) => {
+  console.log('TypeComponent')
     const clickHandler = (pomodoroType) => {
       if (pomodoroType === 'long_break') {
         changePomodoroType({ type: 'long_break', id, previous: type })
@@ -15,6 +18,6 @@ const TypeComponent = ({ id, type, changePomodoroType }) => {
       <button onClick={() => clickHandler('short_break')} className={type === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
       <button onClick={() => clickHandler('long_break')} className={type === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
     </div>)
-  }
+  })
 
 export default TypeComponent;
