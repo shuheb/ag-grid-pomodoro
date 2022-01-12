@@ -3,7 +3,7 @@ import { PomodoroContext } from '../PomodoroContext';
 import ActionComponent from './ActionComponent';
 import TypeComponent from './TypeComponent';
 
-const PomodoroCellRendererComponent = memo((props) => {
+const PomodoroView = memo((props) => {
   const { rowData, currentRow, changePomodoroType, startTimer, stopTimer } = useContext(PomodoroContext);
   const {themes} = props;
 
@@ -63,4 +63,4 @@ if(currentRow === -1) {
     </div>)
 })
 
-export default PomodoroCellRendererComponent;
+export default PomodoroView;

@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 const ActionComponent = memo(({ background, id, timerStarted, stopTimer, startTimer, currentRow, timeLeft }) => {
-    console.log('currentRow', currentRow)
+    
     return (<div className="btn-container" >
         <button disabled={currentRow !== -1 ? id !== currentRow : false} style={{ color: background }}
             onClick={() => timerStarted ? stopTimer({ id, timeLeft }) : startTimer({ id })}>

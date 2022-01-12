@@ -6,9 +6,11 @@ import { AgGridReact } from 'ag-grid-react';
 import ActionCellRenderer from './components/cell-renderers/ActionCellRenderer';
 import TypeCellRenderer from './components/cell-renderers/TypeCellRenderer';
 import TimerCellRenderer from './components/cell-renderers/TimerCellRenderer';
+import PomodoroActionsRenderer from './components/cell-renderers/PomodoroActionsRenderer';
 import { PomodoroContext } from './PomodoroContext';
 import StatusBar from './components/StatusBar';
 import 'ag-grid-enterprise';
+
 
 function Grid(props) {
     const { themes } = props;
@@ -99,9 +101,11 @@ function Grid(props) {
             },
         },
         {
-            field: 'type', minWidth: 350,
+            headerName: 'Pomodoro Actions',
+            field:'completed',
+            minWidth:300,
             cellRendererSelector: ({ data }) => {
-                return data.task ? { frameworkComponent: TypeCellRenderer, params: {} } : undefined;
+                return data.task ? { frameworkComponent: PomodoroActionsRenderer, params: {themes} } : undefined;
             },
             cellClassRules: {
                 'shade-cell': ({ node }) => {
@@ -111,6 +115,19 @@ function Grid(props) {
                 },
             }
         },
+        // {
+        //     field: 'type', minWidth: 350,
+        //     cellRendererSelector: ({ data }) => {
+        //         return data.task ? { frameworkComponent: TypeCellRenderer, params: {} } : undefined;
+        //     },
+        //     cellClassRules: {
+        //         'shade-cell': ({ node }) => {
+        //             if (node.data.type === "pomodoro" || node.data.type === "short_break" || node.data.type === "long_break") {
+        //                 return true;
+        //             }
+        //         },
+        //     }
+        // },
         { field: 'progress', }
     ];
 

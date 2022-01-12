@@ -1,5 +1,5 @@
 import './App.scss';
-import PomodoroCellRendererComponent from './components/PomodoroCellRendererComponent';
+import PomodoroView from './components/PomodoroView';
 import Grid from './Grid';
 import { PomodoroProvider } from './PomodoroContext';
 
@@ -23,7 +23,7 @@ const App = () => {
   return (
     <div style={{ height: '60%', width: '100%' }}>
       <PomodoroProvider>
-        <PomodoroCellRendererComponent themes={themes} />
+        <PomodoroView themes={themes} />
         <Grid themes={themes} />
       </PomodoroProvider>
     </div>

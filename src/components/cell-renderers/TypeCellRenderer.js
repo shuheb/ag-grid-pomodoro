@@ -5,7 +5,6 @@ import TypeComponent from '../TypeComponent';
 const TypeCellRenderer = memo(props => {
   console.log('TypeCellRenderer');
   const { changePomodoroType } = useContext(PomodoroContext);
-  // const { changePomodoroType} = props;
   const {type, id} = props.node.data;
 
   return (<TypeComponent type={type} id={id} changePomodoroType={changePomodoroType} />)

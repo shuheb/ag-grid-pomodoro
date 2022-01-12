@@ -1,7 +1,7 @@
 import initialState from "./initialState";
 import { useReducer, createContext, useCallback } from 'react';
 
-import { UPDATE_TASK_NAME, START_TIMER, STOP_TIMER, ADD_TASK, TOGGLE_TIMER, CHANGE_POMODORO_TYPE, UPDATE_CURRENT_TIMER, DISABLE_TIMER_ON_OTHER_ROWS, DECREMENT_TIMER, UPDATE_TIME_LEFT, PERSIST_SECONDS, REMOVE_CURRENT_TIMER } from "./ActionCreators";
+import { UPDATE_TASK_NAME, START_TIMER, STOP_TIMER, ADD_TASK, TOGGLE_TIMER, CHANGE_POMODORO_TYPE, UPDATE_CURRENT_TIMER, DISABLE_TIMER_ON_OTHER_ROWS, DECREMENT_TIMER, UPDATE_TIME_LEFT, PERSIST_SECONDS, REMOVE_CURRENT_TIMER, MARK_AS_COMPLETE, DELETE_POMODORO } from "./ActionCreators";
 import { v4 as generateId } from 'uuid';
 
 
@@ -11,7 +11,12 @@ const reducer = (state = {}, action) => {
     console.warn(`************* ${action.type} ***********`)
     switch (action.type) {
         case START_TIMER:
-            return { ...state, rowData: startTimerOnRow(state.rowData, action.payload.id, true) }
+            return {
+                ...state, rowData: state.rowData.map(row => {
+                    if (row.id !== action.payload.id) return row;
+                    return { ...row, timerStarted: true };
+                })
+            };
         case STOP_TIMER:
             return {
                 ...state, currentRow: -1, rowData: state.rowData.map(row => {
@@ -19,10 +24,17 @@ const reducer = (state = {}, action) => {
                     return { ...row, timerStarted: false }
                 })
             }
-        case TOGGLE_TIMER:
-            return { ...state, rowData: toggleTimer(state.rowData, action.payload.id) }
         case ADD_TASK:
             return { ...state, rowData: [...state.rowData, { id: action.payload.id, timerStarted: false, type: 'pomodoro', timeLeft: 5 }] }
+        case DELETE_POMODORO:
+            return { ...state, rowData: state.rowData.filter((row) => row.id !== action.payload.id) };
+        case MARK_AS_COMPLETE:
+            return {
+                ...state, rowData: state.rowData.map(row => {
+                    if (row.id !== action.payload.id) return row;
+                    return { ...row, completed: true }
+                })
+            }
         case UPDATE_TASK_NAME:
             return {
                 ...state, rowData: state.rowData.map(row => {
@@ -33,13 +45,7 @@ const reducer = (state = {}, action) => {
         case CHANGE_POMODORO_TYPE:
             return { ...state, rowData: updateRowDataWithNewType(state.rowData, action.payload.id, action.payload.type) };
         case UPDATE_CURRENT_TIMER:
-            return { ...state, currentRow: action.payload.id }
-        case DISABLE_TIMER_ON_OTHER_ROWS:
-            return { ...state, rowData: stopTimerOnOtherRows(state.rowData, action.payload.id) };
-        case DECREMENT_TIMER:
-            return {
-                ...state, rowData: decrementTimeLeftOnRow(state.rowData, action.payload.id)
-            }
+            return { ...state, currentRow: action.payload.id };
         case UPDATE_TIME_LEFT:
             return { ...state, rowData: updateTimeLeftOnRow(state.rowData, action.payload.id, action.payload.type) };
         case PERSIST_SECONDS:
@@ -56,37 +62,7 @@ const reducer = (state = {}, action) => {
             return state;
     }
 }
-const stopTimerOnOtherRows = (rowData, id) => {
-    const newRowData = rowData.map(row => {
-        if (row.id === id) return row;
-        if (row.timerStarted) return { ...row, timerStarted: false };
-        return row;
-    });
-    return newRowData
-};
-const startTimerOnRow = (rowData, id, toggle) => {
-    const newRowData = rowData.map((row) => {
-        if (row.id !== id) return row;
-        return { ...row, timerStarted: toggle, start_time: new Date() }
-    })
-    return newRowData
-}
 
-const stopTimerOnRow = (rowData, id, toggle) => {
-    const newRowData = rowData.map((row) => {
-        if (row.id !== id) return row;
-        return { ...row, timerStarted: toggle }
-    })
-    return newRowData
-}
-
-const toggleTimer = (rowData, id) => {
-    const newRowData = rowData.map((row) => {
-        if (row.id !== id) return row;
-        return { ...row, timerStarted: !row.timerStarted }
-    })
-    return newRowData
-}
 
 const updateRowDataWithNewType = (rowData, id, type) => {
     const newRowData = rowData.map((row) => {
@@ -115,14 +91,6 @@ const updateTimeLeftOnRow = (rowData, id, type) => {
     })
 }
 
-const decrementTimeLeftOnRow = (rowData, id) => {
-    const newRowData = rowData.map(row => {
-        if (row.id !== id) return row;
-        return { ...row, timeLeft: row.timeLeft - 1 }
-    });
-
-    return newRowData
-}
 
 export const PomodoroProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -137,13 +105,6 @@ export const PomodoroProvider = ({ children }) => {
                 id
             },
         });
-
-        // dispatch({
-        //     type: DISABLE_TIMER_ON_OTHER_ROWS,
-        //     payload: {
-        //         id
-        //     }
-        // })
 
         dispatch({
             type: UPDATE_CURRENT_TIMER,
@@ -238,7 +199,25 @@ export const PomodoroProvider = ({ children }) => {
         });
     }, [dispatch]);
 
-    const value = { rowData, currentRow, startTimer, stopTimer, updateTaskName, addTask, toggleTimer, changePomodoroType, decrementTimeLeft, persistSeconds };
+    const markAsComplete = useCallback(({ id }) => {
+        dispatch({
+            type: MARK_AS_COMPLETE,
+            payload: {
+                id
+            },
+        });
+    }, [dispatch]);
+
+    const deletePomodoro = useCallback(({ id }) => {
+        dispatch({
+            type: DELETE_POMODORO,
+            payload: {
+                id
+            },
+        });
+    }, [dispatch]);
+
+    const value = { rowData, currentRow, startTimer, stopTimer, updateTaskName, addTask, toggleTimer, changePomodoroType, decrementTimeLeft, persistSeconds, markAsComplete, deletePomodoro };
 
     return (<PomodoroContext.Provider value={value}>
         {children}
