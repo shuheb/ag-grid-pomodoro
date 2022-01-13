@@ -22,19 +22,13 @@ function Grid(props) {
         {
             field: "task",
             editable: true,
+
             cellClassRules: {
                 'shade-cell': ({ node }) => {
                     if (node.data.type === "pomodoro" || node.data.type === "short_break" || node.data.type === "long_break") {
                         return true;
                     }
                 },
-                'gray-cell': ({ node }) => {
-                    if (node.data.task) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
             },
             valueFormatter: ({ value }) => {
                 if (!value) { return 'enter value...' }
@@ -50,12 +44,10 @@ function Grid(props) {
             cellRendererSelector: ({ data }) => {
                 return data.task ? { frameworkComponent: ActionCellRenderer, params: { themes } } : undefined;
             },
-            cellClassRules: {
-                'shade-cell': ({ node }) => {
-                    if (node.data.type === "pomodoro" || node.data.type === "short_break" || node.data.type === "long_break") {
-                        return true;
-                    }
-                },
+            cellStyle: {
+                backgroundColor: '#ffffff1a',
+                fontWeight: 'bold',
+                fontSize: '24px'
             },
         },
         {
@@ -102,18 +94,16 @@ function Grid(props) {
         },
         {
             headerName: 'Pomodoro Actions',
-            field:'completed',
-            minWidth:300,
+            field: 'completed',
+            minWidth: 300,
             cellRendererSelector: ({ data }) => {
-                return data.task ? { frameworkComponent: PomodoroActionsRenderer, params: {themes} } : undefined;
+                return data.task ? { frameworkComponent: PomodoroActionsRenderer, params: { themes } } : undefined;
             },
-            cellClassRules: {
-                'shade-cell': ({ node }) => {
-                    if (node.data.type === "pomodoro" || node.data.type === "short_break" || node.data.type === "long_break") {
-                        return true;
-                    }
-                },
-            }
+            cellStyle: {
+                backgroundColor: '#ffffff1a',
+                fontWeight: 'bold',
+                fontSize: '24px'
+            },
         },
         // {
         //     field: 'type', minWidth: 350,
@@ -128,24 +118,30 @@ function Grid(props) {
         //         },
         //     }
         // },
-        { field: 'progress', }
     ];
 
     const defaultColDef = { flex: 1, filter: true, sortable: true };
 
     const getRowStyle = params => {
-        const { type } = params.data;
-        const { background, foreground } = themes[type];
-        switch (type) {
-            case 'pomodoro':
-                return { backgroundColor: background, color: foreground }
-            case 'short_break':
-                return { backgroundColor: background, color: foreground }
-            case 'long_break':
-                return { backgroundColor: background, color: foreground }
-            default:
-                return;
+        const { type, completed } = params.data;
+        
+        if (completed) {
+            const { background, foreground } = themes['completed'];
+            
+            return { backgroundColor: background, color: foreground }
+        } else {
+            const { background, foreground } = themes[type];
+            switch (type) {
+                case 'pomodoro':
+                    return { backgroundColor: background, color: foreground }
+                case 'short_break':
+                    return { backgroundColor: background, color: foreground }
+                case 'long_break':
+                    return { backgroundColor: background, color: foreground }
+                default:
+                    return;
 
+            }
         }
 
     }

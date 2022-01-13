@@ -1,12 +1,12 @@
 import './App.scss';
-import PomodoroView from './components/PomodoroView';
+import PomodoroViewRenderer from './components/PomodoroViewRenderer';
 import Grid from './Grid';
 import { PomodoroProvider } from './PomodoroContext';
 
 const themes = {
   pomodoro: {
     foreground: '#ffffff',
-    background: '#d95550',
+    background: '#660708',
   },
   short_break: {
     foreground: '#ffffff',
@@ -14,16 +14,20 @@ const themes = {
   },
   long_break: {
     foreground: '#ffffff',
-    background: '#457ca3',
+    background: '#003566',
   },
+  completed: {
+    foreground: '#ffffff',
+    background: '#588157'
+  }
 };
 
 const App = () => {
 
   return (
-    <div style={{ height: '60%', width: '100%' }}>
+    <div style={{ height: '100%', width: '100%' }}>
       <PomodoroProvider>
-        <PomodoroView themes={themes} />
+        <PomodoroViewRenderer themes={themes} />
         <Grid themes={themes} />
       </PomodoroProvider>
     </div>

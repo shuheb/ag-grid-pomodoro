@@ -27,7 +27,7 @@ const reducer = (state = {}, action) => {
         case ADD_TASK:
             return { ...state, rowData: [...state.rowData, { id: action.payload.id, timerStarted: false, type: 'pomodoro', timeLeft: 5 }] }
         case DELETE_POMODORO:
-            return { ...state, rowData: state.rowData.filter((row) => row.id !== action.payload.id) };
+            return { ...state, currentRow: -1, rowData: state.rowData.filter((row) => row.id !== action.payload.id) };
         case MARK_AS_COMPLETE:
             return {
                 ...state, rowData: state.rowData.map(row => {

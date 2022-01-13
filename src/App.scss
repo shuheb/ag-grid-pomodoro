@@ -67,7 +67,7 @@
 // }
 
 .shade-cell {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #ffffff1a;
   // color:white;
   font-weight: bold;
   font-size: 24px;
@@ -129,7 +129,6 @@
     border: none;
     margin: 7px;
     border-radius: 4px;
-    
     font-size: 15px;
     height: 25px;
     font-weight: bold;
@@ -137,6 +136,11 @@
     background-color: white;
     transition: color 0.5s ease-in-out 0s;
 
+}
+.p-button:disabled {
+  background-color: rgba(239, 239, 239, 0.3);
+  pointer-events: none;
+  // background-color: #ff0000;
 }
 // .p-button.red {
 //   color: rgb(217, 85, 80);

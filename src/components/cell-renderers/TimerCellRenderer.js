@@ -12,7 +12,7 @@ const TimerCellRenderer = memo(props => {
 
   // return (<ContextComponent id={id} timerStarted={timerStarted} timeLeft={timeLeft} type={type} stopTimer={stopTimer} persistSeconds={persistSeconds} />)
 
-  const { stopTimer, currentRow, persistSeconds } = useContext(PomodoroContext);
+  const { stopTimer, currentRow, persistSeconds, markAsComplete } = useContext(PomodoroContext);
   // const { stopTimer, currentRow, persistSeconds } = props;
   const { id, timerStarted, timeLeft, type } = props.node.data;
 
@@ -23,13 +23,14 @@ const TimerCellRenderer = memo(props => {
   }, [type]);
   if (!timerStarted && seconds && seconds < timeLeft) {
     // debugger
-              persistSeconds({ id, timeLeft: seconds })
-              console.log('******* SAVE THIS VALUE',seconds)
-          };
+    persistSeconds({ id, timeLeft: seconds })
+    console.log('******* SAVE THIS VALUE', seconds)
+  };
   useEffect(() => {
     let timer;
     if (seconds === 0) {
       stopTimer({ id });
+      markAsComplete({ id })
     }
     else if (timerStarted && seconds > 0) {
       timer = setInterval(() => {
