@@ -1,5 +1,5 @@
 
-import { useContext, useCallback } from 'react';
+import { useContext, useCallback, useRef } from 'react';
 import './App.scss';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -8,8 +8,8 @@ import TypeCellRenderer from './components/cell-renderers/TypeCellRenderer';
 import TimerCellRenderer from './components/cell-renderers/TimerCellRenderer';
 import PomodoroActionsRenderer from './components/cell-renderers/PomodoroActionsRenderer';
 import { PomodoroContext } from './PomodoroContext';
-import StatusBar from './components/StatusBar';
-import 'ag-grid-enterprise';
+import FullWidthRenderer from './components/FullWidthRenderer';
+
 
 
 function Grid(props) {
@@ -124,51 +124,58 @@ function Grid(props) {
 
     const getRowStyle = params => {
         const { type, completed } = params.data;
-        
-        if (completed) {
-            const { background, foreground } = themes['completed'];
-            
-            return { backgroundColor: background, color: foreground }
-        } else {
-            const { background, foreground } = themes[type];
-            switch (type) {
-                case 'pomodoro':
-                    return { backgroundColor: background, color: foreground }
-                case 'short_break':
-                    return { backgroundColor: background, color: foreground }
-                case 'long_break':
-                    return { backgroundColor: background, color: foreground }
-                default:
-                    return;
+        if (!params.node.isRowPinned()) {
 
+
+            if (completed) {
+                const { background, foreground } = themes['completed'];
+
+                return { backgroundColor: background, color: foreground }
+            } else {
+                const { background, foreground } = themes[type];
+                switch (type) {
+                    case 'pomodoro':
+                        return { backgroundColor: background, color: foreground }
+                    case 'short_break':
+                        return { backgroundColor: background, color: foreground }
+                    case 'long_break':
+                        return { backgroundColor: background, color: foreground }
+                    default:
+                        return;
+
+                }
             }
+        } else {
+
+            const { background, foreground } = themes['long_break'];
+            console.log('applying', background, foreground)
+            // return { backgroundColor: background, color: foreground }
         }
+
+
 
     }
 
+    const gridRef = useRef();
+
     return (
-        <div style={{ height: '60%', width: '100%' }}>
+        <div style={{ height: '50%', width: '100%' }}>
+            <button onClick={() => gridRef.current.api.forEachNode(node => console.log(node))}>log out data</button>
             <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
                 <AgGridReact
                     rowData={rowData}
+                    ref={gridRef}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     reactUi={true}
                     immutableData={true}
+                    fullWidthCellRendererFramework={FullWidthRenderer}
+                    fullWidthCellRendererParams={{ themes }}
+                    isFullWidthCell={(node) => node.rowPinned === 'bottom'}
                     getRowStyle={getRowStyle}
                     getRowNodeId={data => data.id}
-                    statusBar={{
-                        statusPanels: [
-                            {
-                                statusPanelFramework: StatusBar,
-                                statusPanelParams: {
-
-                                },
-                                key: 'statusBarKey',
-                                align: 'left'
-                            },
-                        ]
-                    }}
+                    getRowHeight={(params) => params.node.rowPinned === 'bottom' ? 82 : 42}
+                    pinnedBottomRowData={[{}]}
                 >
                 </AgGridReact>
             </div>

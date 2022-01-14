@@ -3,22 +3,41 @@ import PomodoroViewRenderer from './components/PomodoroViewRenderer';
 import Grid from './Grid';
 import { PomodoroProvider } from './PomodoroContext';
 
+// const themes = {
+//   pomodoro: {
+//     foreground: '#ffffff',
+//     background: '#d95550',
+//   },
+//   short_break: {
+//     foreground: '#ffffff',
+//     background: '#4c9195',
+//   },
+//   long_break: {
+//     foreground: '#ffffff',
+//     background: '#457ca3',
+//   },
+//   completed: {
+//     foreground: 'fffffff',
+//     background: '#588157'
+//   }
+// };
+
 const themes = {
   pomodoro: {
     foreground: '#ffffff',
-    background: '#660708',
+    background: '#d32f2f',
   },
   short_break: {
     foreground: '#ffffff',
-    background: '#4c9195',
+    background: '#7b1fa2',
   },
   long_break: {
     foreground: '#ffffff',
-    background: '#003566',
+    background: '#1565c0',
   },
   completed: {
-    foreground: '#ffffff',
-    background: '#588157'
+    foreground: 'fffffff',
+    background: '#4caf50'
   }
 };
 
