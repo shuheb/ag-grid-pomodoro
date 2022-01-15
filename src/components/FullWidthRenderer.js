@@ -3,7 +3,7 @@ import { PomodoroContext } from '../PomodoroContext';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import { FormControl, Box, Select, MenuItem, InputLabel, Button, TextField, FormHelperText } from '@mui/material';
 const FullWidthRenderer = memo((props) => {
-    const { addTask } = useContext(PomodoroContext);
+    const { addTask, rowData, currentRow } = useContext(PomodoroContext);
     const [pomodoroCount, setPomodoroCount] = useState(1);
     const [task, setTask] = useState("");
     const [error, setError] = useState(false);
@@ -31,8 +31,8 @@ const FullWidthRenderer = memo((props) => {
                 sx={{
                     display: 'flex',
                     alignItems: "center",
-                    justifyContent:'center',
-                    width:'100%',
+                    justifyContent: 'center',
+                    width: '100%',
                     '& .MuiTextField-root': { mx: 3 },
                     '& .MuiButton-root': { mx: 3 },
                 }}
@@ -92,7 +92,22 @@ const FullWidthRenderer = memo((props) => {
             >
             </form> */}
         </div>
-        <div style={{ width: '20%' }}></div>
+        <div style={{ width: '20%', display: 'flex', height: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
+                <Button
+                    variant="contained"
+                    size='large'
+                    color="primary"
+                    sx={{ mx: 3 }}
+                    // startIcon={<AddTaskIcon />}
+                    onClick={() => {
+                        localStorage.setItem('gridState', JSON.stringify({ rowData, currentRow }))
+                    }}
+                >
+                    Save to Local Storage
+                </Button>
+            </div>
+        </div>
     </div>)
 })
 

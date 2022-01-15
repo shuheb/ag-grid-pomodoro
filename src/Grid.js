@@ -160,7 +160,7 @@ function Grid(props) {
 
     return (
         <div style={{ height: '50%', width: '100%' }}>
-            <button onClick={() => gridRef.current.api.forEachNode(node => console.log(node))}>log out data</button>
+            {/* <button onClick={() => gridRef.current.api.forEachNode(node => console.log(node))}>log out data</button> */}
             <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
                 <AgGridReact
                     rowData={rowData}
@@ -176,6 +176,13 @@ function Grid(props) {
                     getRowNodeId={data => data.id}
                     getRowHeight={(params) => params.node.rowPinned === 'bottom' ? 82 : 42}
                     pinnedBottomRowData={[{}]}
+                    onGridReady={(params) => {
+                        // const gridState = JSON.parse(localStorage.getItem('gridState'));
+                        // if(gridState) {
+                        //     params.api.setRowData(gridState);
+                        // }
+
+                    }}
                 >
                 </AgGridReact>
             </div>

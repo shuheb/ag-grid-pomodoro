@@ -10,7 +10,7 @@ const PomodoroGridView = memo((props) => {
   const { theme } = props;
 
   const [rowInfo, setRowInfo] = useState(null);
-  const { type, timeLeft, id, task, timerStarted } = rowInfo ? rowInfo : '';
+  const { type, timeLeft, id, task, timerStarted, completed } = rowInfo ? rowInfo : '';
   const [seconds, setSeconds] = useState(25 * 60)
   useEffect(() => {
     if (currentRow !== -1) {
@@ -40,7 +40,7 @@ const PomodoroGridView = memo((props) => {
     return () => {
       if (timer) { clearInterval(timer); };
     }
-  }, [seconds, timerStarted, id]);
+  }, [ timerStarted, id]);
 
   const secondsToShow = (seconds % 60) < 10 ? `0${seconds % 60}` : seconds % 60;
   const minutesToShow = Math.floor(seconds / 60) < 10 ? `0${Math.floor(seconds / 60)}` : Math.floor(seconds / 60);
@@ -104,9 +104,15 @@ const PomodoroView = memo((props) => {
 
 const PomodoroViewRenderer = memo((props) => {
   console.log('PomodoroViewRenderer')
-  const { currentRow } = useContext(PomodoroContext);
+  const { currentRow, completed } = useContext(PomodoroContext);
   const [type, setType] = useState('pomodoro');
   const { themes } = props;
+
+  useEffect(() => {
+    if(completed) {
+      setType('completed')
+    }
+  }, [completed])
 
   useEffect(() => {
     if (currentRow !== -1) {
@@ -129,7 +135,7 @@ const PomodoroViewRenderer = memo((props) => {
       setType('pomodoro')
     }
   }
-
+console.log(themes[type].background)
   return (<div className="p-background" style={{ backgroundColor: themes[type].background }} >
     <div className="p-container">
       <div className="p-title">
