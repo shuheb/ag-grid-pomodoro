@@ -1,10 +1,9 @@
 
-import { useContext, useCallback, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import './App.scss';
 
 import { AgGridReact } from 'ag-grid-react';
 import ActionCellRenderer from './components/cell-renderers/ActionCellRenderer';
-import TypeCellRenderer from './components/cell-renderers/TypeCellRenderer';
 import TimerCellRenderer from './components/cell-renderers/TimerCellRenderer';
 import PomodoroActionsRenderer from './components/cell-renderers/PomodoroActionsRenderer';
 import { PomodoroContext } from './PomodoroContext';
@@ -123,7 +122,7 @@ function Grid(props) {
     const defaultColDef = { flex: 1, filter: true, sortable: true };
 
     const getRowStyle = params => {
-        const { type, completed } = params.data;
+        const { completed } = params.data;
         if (!params.node.isRowPinned()) {
 
 
@@ -132,6 +131,9 @@ function Grid(props) {
 
                 return { backgroundColor: background, color: foreground }
             } else {
+                const { background, foreground } = themes['pomodoro'];
+                return { backgroundColor: background, color: foreground }
+                /*
                 const { background, foreground } = themes[type];
                 switch (type) {
                     case 'pomodoro':
@@ -144,11 +146,12 @@ function Grid(props) {
                         return;
 
                 }
+                */
             }
         } else {
 
-            const { background, foreground } = themes['long_break'];
-            console.log('applying', background, foreground)
+            // const { background, foreground } = themes['long_break'];
+            // console.log('applying', background, foreground)
             // return { backgroundColor: background, color: foreground }
         }
 
@@ -160,7 +163,10 @@ function Grid(props) {
 
     return (
         <div style={{ height: '50%', width: '100%' }}>
-            {/* <button onClick={() => gridRef.current.api.forEachNode(node => console.log(node))}>log out data</button> */}
+            <button onClick={() => {
+                // gridRef.current.api.forEachNode(node => console.log(node))
+                console.log(rowData);
+            }}>log out data</button>
             <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
                 <AgGridReact
                     rowData={rowData}

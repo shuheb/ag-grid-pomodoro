@@ -3,7 +3,7 @@ import { createContext } from "react";
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    console.log('ThemeProvider')
+    // console.log('ThemeProvider')
     const themes = {
         pomodoro: {
             foreground: '#ffffff',

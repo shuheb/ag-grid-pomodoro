@@ -1,7 +1,7 @@
 import { memo } from "react"
 
 const TypeComponent = memo(({ id, type, changePomodoroType }) => {
-  console.log('TypeComponent')
+  // console.log('TypeComponent')
     const clickHandler = (pomodoroType) => {
       if (pomodoroType === 'long_break') {
         changePomodoroType({ type: 'long_break', id, previous: type })

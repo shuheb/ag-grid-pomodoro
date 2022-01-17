@@ -1,7 +1,7 @@
 import initialState from "./initialState";
-import { useReducer, createContext, useCallback, useEffect } from 'react';
+import { useReducer, createContext, useCallback } from 'react';
 
-import { UPDATE_TASK_NAME, START_TIMER, STOP_TIMER, ADD_TASK, TOGGLE_TIMER, CHANGE_POMODORO_TYPE, UPDATE_CURRENT_TIMER, DISABLE_TIMER_ON_OTHER_ROWS, DECREMENT_TIMER, UPDATE_TIME_LEFT, PERSIST_SECONDS, REMOVE_CURRENT_TIMER, MARK_AS_COMPLETE, DELETE_POMODORO } from "./ActionCreators";
+import { UPDATE_TASK_NAME, START_TIMER, STOP_TIMER, ADD_TASK, TOGGLE_TIMER, UPDATE_CURRENT_TIMER, DECREMENT_TIMER, UPDATE_TIME_LEFT, PERSIST_SECONDS, REMOVE_CURRENT_TIMER, MARK_AS_COMPLETE, DELETE_POMODORO } from "./ActionCreators";
 import { v4 as generateId } from 'uuid';
 
 
@@ -12,7 +12,7 @@ const reducer = (state = {}, action) => {
     switch (action.type) {
         case START_TIMER:
             return {
-                ...state, rowData: state.rowData.map(row => {
+                ...state, currentRow: action.payload.id, rowData: state.rowData.map(row => {
                     if (row.id !== action.payload.id) return row;
                     return { ...row, timerStarted: true };
                 })
@@ -25,7 +25,16 @@ const reducer = (state = {}, action) => {
                 })
             }
         case ADD_TASK:
-            return { ...state, rowData: [...state.rowData, { id: action.payload.id, task: action.payload.task, timerStarted: false, type: 'pomodoro', timeLeft: 5 }] }
+            return {
+                ...state,
+                rowData: [...state.rowData, {
+                    id: action.payload.id,
+                    task: action.payload.task,
+                    timerStarted: false,
+                    completed: false,
+                    timeLeft: 5
+                }]
+            }
         case DELETE_POMODORO:
             return { ...state, currentRow: -1, rowData: state.rowData.filter((row) => row.id !== action.payload.id) };
         case MARK_AS_COMPLETE:
@@ -42,8 +51,7 @@ const reducer = (state = {}, action) => {
                     return { ...row, task: action.payload.task };
                 })
             };
-        case CHANGE_POMODORO_TYPE:
-            return { ...state, rowData: updateRowDataWithNewType(state.rowData, action.payload.id, action.payload.type) };
+
         case UPDATE_CURRENT_TIMER:
             return { ...state, currentRow: action.payload.id };
         case UPDATE_TIME_LEFT:
@@ -63,14 +71,6 @@ const reducer = (state = {}, action) => {
     }
 }
 
-
-const updateRowDataWithNewType = (rowData, id, type) => {
-    const newRowData = rowData.map((row) => {
-        if (row.id !== id) return row;
-        return { ...row, type }
-    });
-    return newRowData;
-}
 
 const updateTimeLeftOnRow = (rowData, id, type) => {
     let timeLeft = 1500;
@@ -103,9 +103,7 @@ export const PomodoroProvider = ({ children }) => {
     const { rowData, currentRow } = state;
 
 
-    useEffect(() => {
-        console.warn('PomodoroProvider')
-    }, [])
+
 
     const startTimer = useCallback(({ id }) => {
         dispatch({
@@ -115,19 +113,20 @@ export const PomodoroProvider = ({ children }) => {
             },
         });
 
-        dispatch({
-            type: UPDATE_CURRENT_TIMER,
-            payload: {
-                id
-            }
-        });
+        // dispatch({
+        //     type: UPDATE_CURRENT_TIMER,
+        //     payload: {
+        //         id
+        //     }
+        // });
     }, [dispatch]);
 
     const stopTimer = useCallback(({ id, timeLeft }) => {
         dispatch({
             type: STOP_TIMER,
             payload: {
-                id
+                id,
+                timeLeft
             },
         });
     }, [dispatch]);
@@ -140,33 +139,6 @@ export const PomodoroProvider = ({ children }) => {
             },
         });
     }, [dispatch]);
-
-    const changePomodoroType = useCallback(({ id, type, previous }) => {
-        if (type !== previous) {
-            dispatch({
-                type: CHANGE_POMODORO_TYPE,
-                payload: {
-                    id,
-                    type
-                }
-            })
-
-            dispatch({
-                type: STOP_TIMER,
-                payload: {
-                    id
-                }
-            })
-
-            dispatch({
-                type: UPDATE_TIME_LEFT,
-                payload: {
-                    id,
-                    type
-                }
-            });
-        }
-    }, [dispatch])
 
     const addTask = useCallback(({ task }) => {
 
@@ -236,7 +208,7 @@ export const PomodoroProvider = ({ children }) => {
         })
     }, [dispatch])
 
-    const value = { rowData, currentRow, startTimer, stopTimer, updateTaskName, addTask, toggleTimer, changePomodoroType, decrementTimeLeft, persistSeconds, markAsComplete, deletePomodoro, removeCurrentTimer};
+    const value = { rowData, currentRow, startTimer, stopTimer, updateTaskName, addTask, toggleTimer, decrementTimeLeft, persistSeconds, markAsComplete, deletePomodoro, removeCurrentTimer };
 
     return (<PomodoroContext.Provider value={value}>
         {children}

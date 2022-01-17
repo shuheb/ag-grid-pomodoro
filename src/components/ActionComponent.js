@@ -1,13 +1,47 @@
 import { memo } from "react";
 
-const ActionComponent = memo(({ background, id, timerStarted, stopTimer, startTimer, currentRow, timeLeft, completed }) => {
+const ActionComponent = memo(({ rowData, background, id, timerStarted, stopTimer, startTimer, currentRow, timeLeft, completed, node }) => {
+    const onClickHandler = () => {
+        if (timerStarted) {
+            stopTimer({ id, timeLeft });
+        }
+        else { startTimer({ id }) }
+    }
 
+    /* a button is disabled if:
+    - completed=true for that row 
+    - another timer is running on another row i.e. timerStarted=true && completed=false
+    */
+
+    // useEffect(() => {
+    //     if (rowData) {
+    //         const timerRunningOnRow = rowData.filter((row) => (row.timerStarted));
+    //         if (timerRunningOnRow.length > 0) {
+    //             timerRunningOnRow = timerRunningOnRow[0];
+    //         }
+    //     }
+
+    // }, [rowData])
+
+    const checkIfATimerIsRunning = () => {
+        if (rowData) {
+            const timerRunningOnRow = rowData.filter((row) => (row.timerStarted && row.id !== id));
+            if (timerRunningOnRow.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
     return (<div className="btn-container" >
         <button
             className="p-button"
-            disabled={completed ? true : currentRow !== -1 ? id !== currentRow : false}
+            disabled={checkIfATimerIsRunning()}
+            // disabled={completed ? true : currentRow !== -1 ? id !== currentRow : false}
             style={{ color: background }}
-            onClick={() => timerStarted ? stopTimer({ id, timeLeft }) : startTimer({ id })}>
+            onClick={onClickHandler}>
             {timerStarted ? 'STOP' : 'START'}
         </button>
     </div>)
