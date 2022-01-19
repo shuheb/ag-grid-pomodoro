@@ -32,7 +32,7 @@ const reducer = (state = {}, action) => {
                     task: action.payload.task,
                     timerStarted: false,
                     completed: false,
-                    timeLeft: 5
+                    timeLeft: 1500
                 }]
             }
         case DELETE_POMODORO:

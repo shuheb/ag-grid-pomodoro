@@ -21,11 +21,12 @@ import { PomodoroProvider } from './PomodoroContext';
 //     background: '#588157'
 //   }
 // };
-
+//rgb(217, 85, 80)
 const themes = {
   pomodoro: {
     foreground: '#ffffff',
-    background: '#d32f2f',
+    background: '#d95550',
+    // background: '#d32f2f',
   },
   short_break: {
     foreground: '#ffffff',
@@ -36,7 +37,7 @@ const themes = {
     background: '#1565c0',
   },
   completed: {
-    foreground: 'fffffff',
+    foreground: '#ffffff',
     background: '#4caf50'
   }
 };

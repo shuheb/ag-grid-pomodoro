@@ -58,9 +58,14 @@ function Grid(props) {
         {
             headerName: "Start Time",
             field: "start_time",
+            valueGetter: params => {
+                if (params.data.timerStarted) {
+                    return new Date();
+                }
+            },
             valueFormatter: params => {
                 // https://stackoverflow.com/questions/8888491/how-do-you-display-javascript-datetime-in-12-hour-am-pm-format
-                if (params.value) {
+                if (params.value && params.data.timerStarted) {
                     const date = params.value
                     var hours = date.getHours();
                     var minutes = date.getMinutes();
@@ -76,9 +81,9 @@ function Grid(props) {
             headerName: 'End Time',
             field: "end_time",
             valueGetter: params => {
-                // console.log('valueGetter:end_time ')
-                if (params.data.start_time) {
-                    const date = params.data.start_time;
+                const startTime = params.getValue('start_time');
+                if (startTime) {
+                    const date = startTime;
                     const newDate = new Date(date);
                     newDate.setMinutes(date.getMinutes() + Math.round(params.data.timeLeft / 60));
                     var hours = newDate.getHours();

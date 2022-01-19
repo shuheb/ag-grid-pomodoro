@@ -24,6 +24,9 @@ const ActionComponent = memo(({ rowData, background, id, timerStarted, stopTimer
     // }, [rowData])
 
     const checkIfATimerIsRunning = () => {
+        if(completed) {
+            return true;
+        }
         if (rowData) {
             const timerRunningOnRow = rowData.filter((row) => (row.timerStarted && row.id !== id));
             if (timerRunningOnRow.length > 0) {

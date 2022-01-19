@@ -217,14 +217,11 @@ const GridTimer = memo((props) => {
 */
 
 const NormalTimer = memo((props) => {
-  // console.log('PomodoroView', props)
-  const { pomodoroType } = props;
-  // console.log('props=', props);
-  const { timeLeft, timerStarted } = props.value || '';
+  const { pomodoroType, stopTimer, startTimer } = props;
+  const { timeLeft, id, task, timerStarted, completed } = props.value || '';
 
   const [seconds, setSeconds] = useState(25 * 60);
   const [stateTimerStarted, setStateTimerStarted] = useState(false);
-  // console.log('NormalTimer', timerStarted, stateTimerStarted, timeLeft, seconds)
 
   useEffect(() => {
     if (timerStarted !== undefined) {
@@ -239,10 +236,12 @@ const NormalTimer = memo((props) => {
     }
   }, [timeLeft])
 
+  /* this is to reset the timer if:
+  - a timer has reached 0 seconds i.e. completed=true
+  - a task from the grid is not being run, therefore we show the default timer
+  */
   useEffect(() => {
-    // if()
-    // console.log(timeLeft);
-    if (!timeLeft) {
+    if (!timeLeft || completed) {
       const newSeconds = pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : 25 * 60;
       setSeconds(newSeconds)
       // setStateTimerStarted(false);
@@ -278,15 +277,27 @@ const NormalTimer = memo((props) => {
     <div
       style={{ fontWeight: 'bold', fontSize: 60 }}
     >
-      {timerString}
-      <button onClick={() => setStateTimerStarted(!stateTimerStarted)}>start</button>
+      <div>{timerString}</div>
+      <div>
+        <button
+          className='p-button'
+          onClick={() => {
+            if (id) {
+              stateTimerStarted ? stopTimer({ id }) : startTimer({ id })
+            }
+            setStateTimerStarted(!stateTimerStarted);
+
+          }}>
+          {stateTimerStarted ? "STOP" : "START"}
+        </button>
+      </div>
     </div>
   )
 })
 
 const PomodoroViewRenderer = memo((props) => {
-  // console.log('PomodoroViewRenderer')
-  const { currentRow, rowData } = useContext(PomodoroContext);
+  // console.log('PomodoroViewRenderer')F
+  const { currentRow, rowData, removeCurrentTimer, stopTimer, startTimer } = useContext(PomodoroContext);
   const [rowInfo, setRowInfo] = useState(null);
   const [pomodoroType, setPomodoroType] = useState('short_break');
   const { timeLeft, id, task, timerStarted, completed } = rowInfo ? rowInfo : {};
@@ -294,12 +305,16 @@ const PomodoroViewRenderer = memo((props) => {
 
   // use case: when timer has finished, move to short_break tyoe
   useEffect(() => {
-    if(completed) {
+    if (completed) {
+      console.log('removingCurrentTimer and setting long_break')
+      removeCurrentTimer({ id });
       setPomodoroType('long_break')
+
     }
-  },[completed])
+  }, [completed])
 
   useEffect(() => {
+    console.log('resetting setRowInfo', currentRow)
     if (currentRow !== -1) {
       setRowInfo(rowData.filter(row => row.id === currentRow)[0])
     } else {
@@ -340,8 +355,9 @@ const PomodoroViewRenderer = memo((props) => {
         <button onClick={() => clickHandler('short_break')} className={pomodoroType === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
         <button onClick={() => clickHandler('long_break')} className={pomodoroType === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
       </div>
-      {currentRow}
-      <NormalTimer value={value} pomodoroType={pomodoroType} />
+      <div style={{ fontWeight: 'bold', fontSize: 26 }}>Working on: {task}</div>
+      <div>{currentRow}</div>
+      <NormalTimer value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} />
       {/* <GridTimer /> */}
     </div>
   </div>)

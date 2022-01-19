@@ -5,7 +5,7 @@ import { PomodoroContext } from '../../PomodoroContext';
 // do the same for the component above
 // check if it saves renders
 const TimerCellRenderer = memo(props => {
-  const { stopTimer, persistSeconds, markAsComplete } = useContext(PomodoroContext);
+  const { stopTimer, persistSeconds, markAsComplete,removeCurrentTimer } = useContext(PomodoroContext);
   // const { stopTimer, currentRow, persistSeconds } = props;
   const { id, timerStarted, timeLeft } = props.node.data;
 

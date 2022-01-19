@@ -7,16 +7,51 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 const PomodoroActionsRenderer = memo((props) => {
     // console.log('PomodoroActionsRenderer')
-    const { markAsComplete, deletePomodoro } = useContext(PomodoroContext);
+    const { markAsComplete, deletePomodoro, rowData } = useContext(PomodoroContext);
 
     // const type = props.node.data.type;
-    const { id, completed } = props.node.data;
+    const { id, completed, timerStarted } = props.node.data;
+
+    const isDeleteButtonDisabled = () => {
+        if (rowData) {
+            const timerRunningOnRow = rowData.filter((row) => (row.timerStarted && row.id !== id));
+            if (timerRunningOnRow.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    const checkIfATimerIsRunning = () => {
+        if (completed) {
+            return true;
+        }
+        if (rowData) {
+            const timerRunningOnRow = rowData.filter((row) => (row.timerStarted && row.id !== id));
+            if (timerRunningOnRow.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
     return (
-        <div style={{ display: 'flex', width: '100%', height: '100%', alignItems:'center', }}>
+        <div style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center', }}>
             <IconButton
                 color='primary'
-                disabled={completed}
-                onClick={() => markAsComplete({ id })}
+                disabled={checkIfATimerIsRunning()}
+                onClick={() => {
+                    if (timerStarted) {
+                        alert('The timer is still running, stop timer before switching.')
+                        return;
+                      }
+                    markAsComplete({ id })
+                }}
                 aria-label="delete"
                 size="small">
                 <CheckCircleIcon fontSize="large" />
@@ -24,8 +59,15 @@ const PomodoroActionsRenderer = memo((props) => {
             <IconButton
                 color='primary'
                 aria-label="delete"
+                disabled={isDeleteButtonDisabled()}
                 size="small"
-                onClick={() => deletePomodoro({ id })}
+                onClick={() => {
+                    if (timerStarted) {
+                        alert('The timer is still running, stop timer before switching.')
+                        return;
+                    }
+                    deletePomodoro({ id })
+                }}
             >
                 <DeleteIcon fontSize="large" />
             </IconButton>

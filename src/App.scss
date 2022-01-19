@@ -4,18 +4,17 @@
 @import '~ag-grid-community/dist/styles/ag-grid.css';
 @import '~ag-grid-community/dist/styles/ag-theme-alpine.css';
 
-
-
-
 .p-background {
   text-align: center;
   display: flex;
   justify-content: center;
+  transition: background-color 0.5s;
 }
 
 .p-container {
   background-color: rgba(255, 255, 255, 0.1);
     padding: 30px 20px;
+    width: 400px;
     border-radius: 6px;
     color:white;
     margin: 60px;
