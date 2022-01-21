@@ -13,38 +13,31 @@
 
 .p-container {
   background-color: rgba(255, 255, 255, 0.1);
+  // background-color: #fffffffa;
     padding: 30px 20px;
     width: 400px;
-    border-radius: 6px;
-    color:white;
+    border-radius: 10px;
+    // color:white;
     margin: 60px;
     max-width: 620px;
 }
 
 .p-title {
   padding-bottom: 10px;
-  // display: flex;
-  // flex-direction: row;
-  // justify-content: space-around;
-    // height: 61px;
-    // align-items: center;
-    // height: 100%;
-
 }
 
-.ag-cell {
-  // background-color: rgb(217, 85, 80);
-}
+// .show-container {
+//   background-color: #fffffffa;
+//   border-radius: 10px;
+// }
 
-.ag-header-cell {
-  // background-color: rgb(217, 85, 80);
-  
-}
-.ag-header-cell-label {
-  // color: white;
-  // font-size: 18px;
-  // text-align: center !important;
-  // font-weight: bold;
+.task-container {
+  background-color: #fffffffa;
+  // background-color: #00000060;
+    opacity: 1;
+    padding: 10px 10px;
+    border-radius: 10px;
+    text-align: left;
 }
 
 .p-background.red {
@@ -58,13 +51,6 @@
   background-color: rgb(69, 124, 163);
 }
 
-
-
-// .ag-row.red {
-//   background-color: rgb(217, 85, 80);
-//   color:white;
-// }
-
 .shade-cell {
   background-color: #ffffff1a;
   // color:white;
@@ -75,16 +61,6 @@
 .gray-cell {
   color:gray;
 }
-// .ag-row.green {
-//   background-color: rgb(76, 145, 149);
-//   color:white;
-// }
-// .ag-row.blue {
-//   background-color: rgb(69, 124, 163);
-//   color:white;
-// }
-
-
 
 
 
@@ -141,16 +117,6 @@
   pointer-events: none;
   // background-color: #ff0000;
 }
-// .p-button.red {
-//   color: rgb(217, 85, 80);
-// }
-
-// .p-button.green {
-//   color: rgb(76, 145, 149);
-// }
-// .p-button.blue {
-//   color: rgb(69, 124, 163);
-// }
 
 .p-title-item.active {
  
@@ -168,60 +134,3 @@
   justify-content: center;
   margin: 50px;
 }
-
-// .ag-theme-alpine {
-//   @include ag-theme-alpine((
-//       // use theme parameters where possible
-//       foreground-color:white,
-//       background-color: rgb(69, 124, 163),
-//       header-background-color: rgb(69, 124, 163),
-//       odd-row-background-color: rgb(69, 124, 163)
-//   ));
-
-//   .ag-header {
-//       // or write CSS selectors to make customisations beyond what the parameters support
-//       // background-color: rgb(76, 145, 149);
-//       // color: white !important;
-//   }
-
-//   .ag-cell {
-//     // background-color:  ;
-//   }
-
-//   .pomodoro-container {
-//     flex-direction: column;
-//     background-color: rgba(255, 255, 255, 0.1);
-//   }
-
-//   .pomodoro-title {
-//     display: flex;
-//     width:100%;
-//     flex-direction: row;
-//     align-content: center;
-//     flex-wrap: nowrap;
-//   }
-
-//   .pomodoro-title > div {
-//     margin: 0px 30px;
-//   }
-
-//   .pomodoro-container > button  {
-//     justify-content: center;
-//       cursor: pointer;
-//       border: none;
-//       margin: 20px 0px 0px;
-//       padding: 0px 12px;
-//       border-radius: 4px;
-//       box-shadow: rgb(235, 235, 235) 0px 6px 0px;
-//       font-family: ArialRounded;
-//       font-size: 22px;
-//       height: 55px;
-//       color: rgb(69, 124, 163);
-//       font-weight: bold;
-//       width: 200px;
-//       background-color: white;
-//       transition: color 0.5s ease-in-out 0s;
-
-//   }
-// }
-

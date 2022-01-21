@@ -217,7 +217,7 @@ const GridTimer = memo((props) => {
 */
 
 const NormalTimer = memo((props) => {
-  const { pomodoroType, stopTimer, startTimer } = props;
+  const { pomodoroType, stopTimer, startTimer, theme } = props;
   const { timeLeft, id, task, timerStarted, completed } = props.value || '';
 
   const [seconds, setSeconds] = useState(25 * 60);
@@ -274,13 +274,12 @@ const NormalTimer = memo((props) => {
   const timerString = `${minutesToShow}:${secondsToShow}`;
 
   return (
-    <div
-      style={{ fontWeight: 'bold', fontSize: 60 }}
-    >
-      <div>{timerString}</div>
+    <div>
+      <div style={{ color: 'white', fontWeight: 'bold', fontSize: 70 }}>{timerString}</div>
       <div>
         <button
           className='p-button'
+          style={{ color: theme.background }}
           onClick={() => {
             if (id) {
               stateTimerStarted ? stopTimer({ id }) : startTimer({ id })
@@ -293,6 +292,37 @@ const NormalTimer = memo((props) => {
       </div>
     </div>
   )
+})
+
+const MessageComponent = memo((props) => {
+
+  const { pomodoroType, theme, task } = props;
+
+  const isPomodoroTask = pomodoroType === "pomodoro";
+
+  const emoji = isPomodoroTask ? '📌' : '🕺';
+
+  return (<div className='task-container'>
+    <div
+      style={{
+        color: theme.background,
+        fontSize: 20
+      }}>
+
+      <span style={{
+        fontSize: 30,
+        paddingRight: '5px'
+      }}>{emoji}</span>
+      {isPomodoroTask ? <span style={{
+        fontWeight: 'bold',
+        fontSize: 24
+      }}>Working on: {task}</span> : <span style={{
+        fontWeight: 'bold',
+        fontSize: 24
+      }}>Time for a break!</span>}
+
+    </div>
+  </div>)
 })
 
 const PomodoroViewRenderer = memo((props) => {
@@ -346,20 +376,18 @@ const PomodoroViewRenderer = memo((props) => {
     }
   }
   const value = { timeLeft, id, task, timerStarted, completed };
-  // console.log(themes[type].background)
-  // console.log('rowinfo=',{ timeLeft, id, task, timerStarted, completed })
-  return (<div className="p-background" style={{ backgroundColor: themes[pomodoroType].background, height: '400px' }} >
+  return (<div className="p-background" style={{ backgroundColor: themes[pomodoroType].background }} >
     <div className="p-container">
       <div className="p-title">
         <button onClick={() => clickHandler('pomodoro')} className={pomodoroType === "pomodoro" ? "p-title-item active" : "p-title-item"}>Pomodoro</button>
         <button onClick={() => clickHandler('short_break')} className={pomodoroType === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
         <button onClick={() => clickHandler('long_break')} className={pomodoroType === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
       </div>
-      <div style={{ fontWeight: 'bold', fontSize: 26 }}>Working on: {task}</div>
-      <div>{currentRow}</div>
-      <NormalTimer value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} />
+      <MessageComponent pomodoroType={pomodoroType} theme={themes[pomodoroType]} task={task} />
+      <NormalTimer value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} theme={themes[pomodoroType]} />
       {/* <GridTimer /> */}
     </div>
+
   </div>)
 })
 export default PomodoroViewRenderer;
