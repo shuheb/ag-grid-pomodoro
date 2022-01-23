@@ -216,6 +216,35 @@ const GridTimer = memo((props) => {
 })
 */
 
+const EndTimeComponent = memo((props) => {
+  const { pomodoroType } = props;
+  const endTime = new Date();
+  const endTimeDelta = pomodoroType === "pomodoro" ? 1500 : pomodoroType === "short_break" ? 300 : 900;
+  endTime.setMinutes(endTime.getMinutes() + Math.round(endTimeDelta / 60));
+  var hours = endTime.getHours();
+  var minutes = endTime.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+  return (<div style={{ textAlign: 'end', paddingTop: '30px' }}>
+    <span style={{
+      color: 'white',
+
+      fontSize: 20
+    }}>
+      end time
+      <span style={{
+        fontWeight: 'bold',
+        fontSize: 30
+      }}>
+        {` ${hours}:${minutes}${ampm}`}
+      </span>
+    </span>
+  </div>)
+})
+
 const NormalTimer = memo((props) => {
   const { pomodoroType, stopTimer, startTimer, theme } = props;
   const { timeLeft, id, task, timerStarted, completed } = props.value || '';
@@ -273,23 +302,25 @@ const NormalTimer = memo((props) => {
   const minutesToShow = Math.floor(seconds / 60) < 10 ? `0${Math.floor(seconds / 60)}` : Math.floor(seconds / 60);
   const timerString = `${minutesToShow}:${secondsToShow}`;
 
+
+
   return (
     <div>
-      <div style={{ color: 'white', fontWeight: 'bold', fontSize: 70 }}>{timerString}</div>
-      <div>
-        <button
-          className='p-button'
-          style={{ color: theme.background }}
-          onClick={() => {
-            if (id) {
-              stateTimerStarted ? stopTimer({ id }) : startTimer({ id })
-            }
-            setStateTimerStarted(!stateTimerStarted);
+      <div style={{ color: 'white', fontWeight: 'bold', fontSize: 90 }}>{timerString}</div>
 
-          }}>
-          {stateTimerStarted ? "STOP" : "START"}
-        </button>
-      </div>
+      <button
+        className='p-button'
+        style={{ color: theme.background }}
+        onClick={() => {
+          if (id) {
+            stateTimerStarted ? stopTimer({ id }) : startTimer({ id })
+          }
+          setStateTimerStarted(!stateTimerStarted);
+
+        }}>
+        {stateTimerStarted ? "STOP" : "START"}
+      </button>
+      <EndTimeComponent pomodoroType={pomodoroType} />
     </div>
   )
 })
@@ -302,11 +333,11 @@ const MessageComponent = memo((props) => {
 
   const emoji = isPomodoroTask ? '📌' : '🕺';
 
-  return (<div className='task-container'>
+  return (<div className='task-container' >
     <div
       style={{
         color: theme.background,
-        fontSize: 20
+        fontSize: 20,
       }}>
 
       <span style={{
