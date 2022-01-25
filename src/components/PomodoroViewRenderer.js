@@ -1,5 +1,7 @@
+import { Alert, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useState, useEffect, useContext, memo } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
+
 
 /*
 const PomodoroGridView = memo((props) => {
@@ -260,7 +262,7 @@ const NormalTimer = memo((props) => {
 
   useEffect(() => {
     if (timeLeft !== undefined) {
-      console.log('setting new seconds', timeLeft)
+      // console.log('setting new seconds', timeLeft)
       setSeconds(timeLeft);
     }
   }, [timeLeft])
@@ -270,10 +272,18 @@ const NormalTimer = memo((props) => {
   - a task from the grid is not being run, therefore we show the default timer
   */
   useEffect(() => {
+
     if (!timeLeft || completed) {
       const newSeconds = pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : 25 * 60;
       setSeconds(newSeconds)
-      // setStateTimerStarted(false);
+      setStateTimerStarted(false);
+    }
+
+    // if timeLeft exists, then a task from the grid is active.
+    // if short_break / long_break is selected, reset timer to adjust for this
+    if (timeLeft) {
+      const newSeconds = pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : 25 * 60;
+      setSeconds(newSeconds)
     }
   }, [pomodoroType])
 
@@ -327,7 +337,7 @@ const NormalTimer = memo((props) => {
 
 const MessageComponent = memo((props) => {
 
-  const { pomodoroType, theme, task } = props;
+  const { pomodoroType, theme, task, id } = props;
 
   const isPomodoroTask = pomodoroType === "pomodoro";
 
@@ -351,9 +361,53 @@ const MessageComponent = memo((props) => {
         fontWeight: 'bold',
         fontSize: 24
       }}>Time for a break!</span>}
-
+      <div>id: {id}</div>
     </div>
   </div>)
+});
+
+const TypeButtonComponent = memo((props) => {
+
+  const { timerStarted, pomodoroType, setPomodoroType } = props;
+  const [showAlert, setShowAlert] = useState(false);
+
+  const onChange = (event, newValue) => {
+    if (timerStarted) {
+      setShowAlert(true);
+
+      setTimeout(() => {
+        setShowAlert(false)
+      }, 3000)
+      return;
+    }
+
+    setPomodoroType(newValue);
+  }
+  return (
+    <div style={{ paddingBottom: 15 }}>
+      <ToggleButtonGroup
+        sx={{
+
+          '& .MuiToggleButton-root': { color: 'white !important' },
+          // '& > :not(style) + :not(style)': { mt: 2 },
+        }}
+        value={pomodoroType}
+        exclusive
+        onChange={onChange}
+      >
+        <ToggleButton value="pomodoro">Pomodoro</ToggleButton>
+        <ToggleButton value="short_break">Short Break</ToggleButton>
+        <ToggleButton value="long_break">Long Break</ToggleButton>
+      </ToggleButtonGroup>
+      {/* <div className="p-title">
+        <button onClick={() => clickHandler('pomodoro')} className={pomodoroType === "pomodoro" ? "p-title-item active" : "p-title-item"}>Pomodoro</button>
+        <button onClick={() => clickHandler('short_break')} className={pomodoroType === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
+        <button onClick={() => clickHandler('long_break')} className={pomodoroType === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
+      </div> */}
+      {showAlert && <div style={{ paddingTop: 15 }}><Alert severity="warning">The timer is still running. - stop timer before switching</Alert></div>}
+    </div>
+  )
+
 })
 
 const PomodoroViewRenderer = memo((props) => {
@@ -363,6 +417,7 @@ const PomodoroViewRenderer = memo((props) => {
   const [pomodoroType, setPomodoroType] = useState('short_break');
   const { timeLeft, id, task, timerStarted, completed } = rowInfo ? rowInfo : {};
   const { themes } = props;
+
 
   // use case: when timer has finished, move to short_break tyoe
   useEffect(() => {
@@ -375,10 +430,21 @@ const PomodoroViewRenderer = memo((props) => {
   }, [completed])
 
   useEffect(() => {
-    console.log('resetting setRowInfo', currentRow)
+    if (id && (pomodoroType === "long_break" || pomodoroType === "short_break")) {
+
+      console.log('i should remove id, probably', pomodoroType);
+      removeCurrentTimer({ id });
+      // setRowInfo({})
+    }
+  }, [pomodoroType])
+
+  useEffect(() => {
+
     if (currentRow !== -1) {
+      console.log('setting setRowInfo', currentRow)
       setRowInfo(rowData.filter(row => row.id === currentRow)[0])
     } else {
+      console.log('resetting setRowInfo', currentRow)
       setRowInfo({})
     }
   }, [currentRow, rowData]);
@@ -392,10 +458,15 @@ const PomodoroViewRenderer = memo((props) => {
   }, [currentRow])
 
   const clickHandler = (pomodoroType) => {
-    if (timerStarted) {
-      alert('The timer is still running, stop timer before switching.')
-      return;
-    }
+    // if (timerStarted) {
+    //   setShowAlert(true);
+
+    //   setTimeout(() => {
+    //     setShowAlert(false)
+    //   }, 3000)
+    //   // alert('The timer is still running, stop timer before switching.')
+    //   return;
+    // }
 
     if (pomodoroType === 'long_break') {
       setPomodoroType('long_break')
@@ -406,15 +477,13 @@ const PomodoroViewRenderer = memo((props) => {
       setPomodoroType('pomodoro')
     }
   }
+
   const value = { timeLeft, id, task, timerStarted, completed };
   return (<div className="p-background" style={{ backgroundColor: themes[pomodoroType].background }} >
     <div className="p-container">
-      <div className="p-title">
-        <button onClick={() => clickHandler('pomodoro')} className={pomodoroType === "pomodoro" ? "p-title-item active" : "p-title-item"}>Pomodoro</button>
-        <button onClick={() => clickHandler('short_break')} className={pomodoroType === "short_break" ? "p-title-item active" : "p-title-item"}>Short Break</button>
-        <button onClick={() => clickHandler('long_break')} className={pomodoroType === "long_break" ? "p-title-item active" : "p-title-item"}>Long Break</button>
-      </div>
-      <MessageComponent pomodoroType={pomodoroType} theme={themes[pomodoroType]} task={task} />
+      <TypeButtonComponent timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
+
+      <MessageComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task} />
       <NormalTimer value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} theme={themes[pomodoroType]} />
       {/* <GridTimer /> */}
     </div>
