@@ -341,6 +341,7 @@ const MessageComponent = memo((props) => {
   const isPomodoroTask = pomodoroType === "pomodoro";
 
   const emoji = isPomodoroTask ? '📌' : '🕺';
+  console.log(task)
 
   return (<div className='task-container' >
     <div
@@ -352,16 +353,29 @@ const MessageComponent = memo((props) => {
       <span style={{
         fontSize: 30,
         paddingRight: '5px'
-      }}>{emoji}</span>
-      {isPomodoroTask ? <span> <span style={{
-        fontWeight: 'bold',
-      }}>Working on</span><div style={{
-        fontWeight: 'bold',
-        fontSize: 24
-      }}>{task}</div></span> : <span style={{
-        fontWeight: 'bold',
-        fontSize: 24
-      }}>Time for a break!</span>}
+      }}>
+        {emoji}
+      </span>
+      {isPomodoroTask ?
+        <span >
+          <span
+            style={{
+              fontWeight: 'bold',
+              fontSize: 24
+            }}
+          >
+            {task ? "Working on" : "Time to work!"}
+          </span>
+          {task && (<div
+          >
+            {task}
+          </div>)}
+        </span> :
+        <span
+          style={{
+            fontWeight: 'bold',
+            fontSize: 24
+          }}>Time for a break!</span>}
       {/* <div>id: {id}</div> */}
     </div>
   </div >)
@@ -373,7 +387,7 @@ const TypeButtonComponent = memo((props) => {
   const [showAlert, setShowAlert] = useState(false);
 
   const onChange = (event, newValue) => {
-    if(!newValue) return;
+    if (!newValue) return;
     if (timerStarted) {
       setShowAlert(true);
 
@@ -475,13 +489,13 @@ const PomodoroViewRenderer = memo((props) => {
       setPomodoroType('pomodoro')
     }
   }
-
+  console.log('main task', task)
   const value = { timeLeft, id, task, timerStarted, completed };
   return (<div className="p-background" style={{ backgroundColor: themes[pomodoroType].background }} >
     <div className="p-container">
       <TypeButtonComponent timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
 
-      <MessageComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={`${task} (${taskNo})`} />
+      <MessageComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task ? `${task} (${taskNo})` : undefined} />
       <NormalTimer value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} theme={themes[pomodoroType]} />
       {/* <GridTimer /> */}
     </div>
