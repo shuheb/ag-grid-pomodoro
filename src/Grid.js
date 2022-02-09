@@ -5,7 +5,6 @@ import './App.scss';
 import { AgGridReact } from 'ag-grid-react';
 import ActionCellRenderer from './components/cell-renderers/ActionCellRenderer';
 import TimerCellRenderer from './components/cell-renderers/TimerCellRenderer';
-import PomodoroActionsRenderer from './components/cell-renderers/PomodoroActionsRenderer';
 import { PomodoroContext } from './PomodoroContext';
 import FullWidthRenderer from './components/FullWidthRenderer';
 
@@ -41,6 +40,7 @@ function Grid(props) {
             cellRendererSelector: ({ data }) => {
                 return data.task ? { frameworkComponent: ActionCellRenderer, params: { themes } } : undefined;
             },
+            maxWidth:200,
             cellStyle: {
                 backgroundColor: '#ffffff1a',
                 fontWeight: 'bold',
@@ -94,19 +94,19 @@ function Grid(props) {
                 }
             },
         },
-        {
-            headerName: 'Pomodoro Actions',
-            field: 'completed',
-            minWidth: 300,
-            cellRendererSelector: ({ data }) => {
-                return data.task ? { frameworkComponent: PomodoroActionsRenderer, params: { themes } } : undefined;
-            },
-            cellStyle: {
-                backgroundColor: '#ffffff1a',
-                fontWeight: 'bold',
-                fontSize: '24px'
-            },
-        },
+        // {
+        //     headerName: 'Pomodoro Actions',
+        //     field: 'completed',
+        //     minWidth: 300,
+        //     cellRendererSelector: ({ data }) => {
+        //         return data.task ? { frameworkComponent: PomodoroActionsRenderer, params: { themes } } : undefined;
+        //     },
+        //     cellStyle: {
+        //         backgroundColor: '#ffffff1a',
+        //         fontWeight: 'bold',
+        //         fontSize: '24px'
+        //     },
+        // },
         // {
         //     field: 'type', minWidth: 350,
         //     cellRendererSelector: ({ data }) => {
