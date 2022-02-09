@@ -1,8 +1,9 @@
-import { Alert, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Alert, Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useState, useEffect, useContext, memo } from 'react';
 import { PomodoroContext } from '../PomodoroContext';
-
-
+import { createTheme } from '@mui/material/styles';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 /*
 const PomodoroGridView = memo((props) => {
 
@@ -218,8 +219,11 @@ const GridTimer = memo((props) => {
 })
 */
 
+
+
+
 const EndTimeComponent = memo((props) => {
-  const { pomodoroType } = props;
+  const { pomodoroType, buttonColor, timerStarted, setTimerStarted, stopTimer, startTimer, id } = props;
   const endTime = new Date();
   const endTimeDelta = pomodoroType === "pomodoro" ? 1500 : pomodoroType === "short_break" ? 300 : 900;
   endTime.setMinutes(endTime.getMinutes() + Math.round(endTimeDelta / 60));
@@ -230,21 +234,55 @@ const EndTimeComponent = memo((props) => {
   hours = hours ? hours : 12; // the hour '0' should be '12'
   minutes = minutes < 10 ? `0${minutes}` : minutes;
 
-  return (<div style={{ textAlign: 'end', paddingTop: '30px' }}>
-    <span style={{
-      color: 'white',
-
-      fontSize: 20
-    }}>
-      end time
-      <span style={{
+  return (<div style={{ display: 'flex', paddingTop: '30px' }}>
+    <Button disableElevation
+      sx={{
+        backgroundColor: 'white',
+        color: buttonColor,
         fontWeight: 'bold',
-        fontSize: 30
+        '&:hover': {
+          backgroundColor: '#00000014',
+          color: 'white'
+        },
+      }}
+      onClick={() => {
+        if (id) {
+          timerStarted ? stopTimer({ id }) : startTimer({ id })
+        }
+        setTimerStarted(!timerStarted);
+
+      }}
+      startIcon={timerStarted ? <StopIcon /> : <PlayArrowIcon />}
+      variant="contained">{timerStarted ? "STOP" : "START"}</Button>
+      {/*
+    <button
+      className='p-button'
+      style={{ color: buttonColor }}
+      onClick={() => {
+        if (id) {
+          timerStarted ? stopTimer({ id }) : startTimer({ id })
+        }
+        setTimerStarted(!timerStarted);
+
       }}>
-        {` ${hours}:${minutes}${ampm}`}
+      {timerStarted ? "STOP" : "START"}
+    </button>
+    */}
+    <div style={{ marginLeft: 'auto' }}>
+      <span style={{
+        color: 'white',
+
+        fontSize: 20
+      }}>
+        end time
+        <span style={{
+          fontWeight: 'bold',
+          fontSize: 30
+        }}>
+          {` ${hours}:${minutes}${ampm}`}
+        </span>
       </span>
-    </span>
-  </div>)
+    </div></div>)
 })
 
 const NormalTimer = memo((props) => {
@@ -316,20 +354,14 @@ const NormalTimer = memo((props) => {
   return (
     <div>
       <div style={{ color: 'white', fontWeight: 'bold', fontSize: 90 }}>{timerString}</div>
-
-      <button
-        className='p-button'
-        style={{ color: theme.background }}
-        onClick={() => {
-          if (id) {
-            stateTimerStarted ? stopTimer({ id }) : startTimer({ id })
-          }
-          setStateTimerStarted(!stateTimerStarted);
-
-        }}>
-        {stateTimerStarted ? "STOP" : "START"}
-      </button>
-      <EndTimeComponent pomodoroType={pomodoroType} />
+      <EndTimeComponent
+        buttonColor={theme.background}
+        timerStarted={stateTimerStarted}
+        setTimerStarted={(prev) => setStateTimerStarted(prev)}
+        stopTimer={stopTimer}
+        id={id}
+        startTimer={startTimer}
+        pomodoroType={pomodoroType} />
     </div>
   )
 })
@@ -409,6 +441,7 @@ const TypeButtonComponent = memo((props) => {
         }}
         value={pomodoroType}
         exclusive
+
         onChange={onChange}
       >
         <ToggleButton value="pomodoro">Pomodoro</ToggleButton>
