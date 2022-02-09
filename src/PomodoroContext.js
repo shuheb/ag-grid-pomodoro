@@ -30,6 +30,7 @@ const reducer = (state = {}, action) => {
                 rowData: [...state.rowData, {
                     id: action.payload.id,
                     task: action.payload.task,
+                    taskNo: action.payload.taskNo,
                     timerStarted: false,
                     completed: false,
                     timeLeft: 1500
@@ -140,13 +141,14 @@ export const PomodoroProvider = ({ children }) => {
         });
     }, [dispatch]);
 
-    const addTask = useCallback(({ task }) => {
+    const addTask = useCallback(({ task, taskNo }) => {
 
         dispatch({
             type: ADD_TASK,
             payload: {
                 id: generateId(),
-                task
+                task,
+                taskNo
             },
         });
     }, [dispatch]);

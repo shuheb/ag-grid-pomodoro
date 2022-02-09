@@ -250,7 +250,6 @@ const EndTimeComponent = memo((props) => {
 const NormalTimer = memo((props) => {
   const { pomodoroType, stopTimer, startTimer, theme } = props;
   const { timeLeft, id, task, timerStarted, completed } = props.value || '';
-
   const [seconds, setSeconds] = useState(25 * 60);
   const [stateTimerStarted, setStateTimerStarted] = useState(false);
 
@@ -262,7 +261,6 @@ const NormalTimer = memo((props) => {
 
   useEffect(() => {
     if (timeLeft !== undefined) {
-      // console.log('setting new seconds', timeLeft)
       setSeconds(timeLeft);
     }
   }, [timeLeft])
@@ -281,8 +279,9 @@ const NormalTimer = memo((props) => {
 
     // if timeLeft exists, then a task from the grid is active.
     // if short_break / long_break is selected, reset timer to adjust for this
+    // otherwise, 
     if (timeLeft) {
-      const newSeconds = pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : 25 * 60;
+      const newSeconds = pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : timeLeft;
       setSeconds(newSeconds)
     }
   }, [pomodoroType])
@@ -354,16 +353,18 @@ const MessageComponent = memo((props) => {
         fontSize: 30,
         paddingRight: '5px'
       }}>{emoji}</span>
-      {isPomodoroTask ? <span style={{
+      {isPomodoroTask ? <span> <span style={{
+        fontWeight: 'bold',
+      }}>Working on</span><div style={{
         fontWeight: 'bold',
         fontSize: 24
-      }}>Working on: {task}</span> : <span style={{
+      }}>{task}</div></span> : <span style={{
         fontWeight: 'bold',
         fontSize: 24
       }}>Time for a break!</span>}
-      <div>id: {id}</div>
+      {/* <div>id: {id}</div> */}
     </div>
-  </div>)
+  </div >)
 });
 
 const TypeButtonComponent = memo((props) => {
@@ -415,14 +416,12 @@ const PomodoroViewRenderer = memo((props) => {
   const { currentRow, rowData, removeCurrentTimer, stopTimer, startTimer } = useContext(PomodoroContext);
   const [rowInfo, setRowInfo] = useState(null);
   const [pomodoroType, setPomodoroType] = useState('short_break');
-  const { timeLeft, id, task, timerStarted, completed } = rowInfo ? rowInfo : {};
+  const { timeLeft, id, task, taskNo, timerStarted, completed } = rowInfo ? rowInfo : {};
   const { themes } = props;
-
 
   // use case: when timer has finished, move to short_break tyoe
   useEffect(() => {
     if (completed) {
-      console.log('removingCurrentTimer and setting long_break')
       removeCurrentTimer({ id });
       setPomodoroType('long_break')
 
@@ -432,7 +431,7 @@ const PomodoroViewRenderer = memo((props) => {
   useEffect(() => {
     if (id && (pomodoroType === "long_break" || pomodoroType === "short_break")) {
 
-      console.log('i should remove id, probably', pomodoroType);
+
       removeCurrentTimer({ id });
       // setRowInfo({})
     }
@@ -441,10 +440,8 @@ const PomodoroViewRenderer = memo((props) => {
   useEffect(() => {
 
     if (currentRow !== -1) {
-      console.log('setting setRowInfo', currentRow)
       setRowInfo(rowData.filter(row => row.id === currentRow)[0])
     } else {
-      console.log('resetting setRowInfo', currentRow)
       setRowInfo({})
     }
   }, [currentRow, rowData]);
@@ -483,7 +480,7 @@ const PomodoroViewRenderer = memo((props) => {
     <div className="p-container">
       <TypeButtonComponent timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
 
-      <MessageComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task} />
+      <MessageComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={`${task} (${taskNo})`} />
       <NormalTimer value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} theme={themes[pomodoroType]} />
       {/* <GridTimer /> */}
     </div>

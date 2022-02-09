@@ -13,7 +13,7 @@ const FullWidthRenderer = memo((props) => {
             setError(true)
         } else {
             for (let i = 0; i < pomodoroCount; i++) {
-                addTask({ task })
+                addTask({ task, taskNo: i + 1 })
             };
             setError(false)
         }

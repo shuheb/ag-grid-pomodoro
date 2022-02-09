@@ -20,23 +20,21 @@ function Grid(props) {
         { field: 'id' },
         {
             field: "task",
-            editable: true,
+            // editable: true,
 
-            cellClassRules: {
-                'shade-cell': ({ node }) => {
-                    if (node.data.type === "pomodoro" || node.data.type === "short_break" || node.data.type === "long_break") {
-                        return true;
-                    }
-                },
-            },
-            valueFormatter: ({ value }) => {
-                if (!value) { return 'enter value...' }
-            },
-            onCellValueChanged: params => {
-                if (params.oldValue !== params.newValue) {
-                    updateTaskName({ id: params.data.id, task: params.newValue })
+        
+            valueFormatter: (params) => {
+                // if (!value) { return 'enter value...' }
+                if(params.data.taskNo) {
+                    return `${params.value} (${params.data.taskNo})`
                 }
-            }
+                return params.value;
+            },
+            // onCellValueChanged: params => {
+            //     if (params.oldValue !== params.newValue) {
+            //         updateTaskName({ id: params.data.id, task: params.newValue })
+            //     }
+            // }
         },
         {
             field: "action",
@@ -168,10 +166,10 @@ function Grid(props) {
 
     return (
         <div style={{ height: '50%', width: '100%' }}>
-            <button onClick={() => {
+            {/* <button onClick={() => {
                 // gridRef.current.api.forEachNode(node => console.log(node))
                 console.log(rowData);
-            }}>log out data</button>
+            }}>log out data</button> */}
             <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
                 <AgGridReact
                     rowData={rowData}
