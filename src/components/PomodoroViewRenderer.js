@@ -373,6 +373,7 @@ const TypeButtonComponent = memo((props) => {
   const [showAlert, setShowAlert] = useState(false);
 
   const onChange = (event, newValue) => {
+    if(!newValue) return;
     if (timerStarted) {
       setShowAlert(true);
 
@@ -381,7 +382,7 @@ const TypeButtonComponent = memo((props) => {
       }, 3000)
       return;
     }
-
+    console.log(pomodoroType)
     setPomodoroType(newValue);
   }
   return (
@@ -412,7 +413,7 @@ const TypeButtonComponent = memo((props) => {
 })
 
 const PomodoroViewRenderer = memo((props) => {
-  // console.log('PomodoroViewRenderer')F
+  // console.log('PomodoroViewRenderer')
   const { currentRow, rowData, removeCurrentTimer, stopTimer, startTimer } = useContext(PomodoroContext);
   const [rowInfo, setRowInfo] = useState(null);
   const [pomodoroType, setPomodoroType] = useState('short_break');
