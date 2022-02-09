@@ -1,5 +1,5 @@
 
-import { useContext, useRef } from 'react';
+import React, { useContext, useRef, memo } from 'react';
 import './App.scss';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -9,22 +9,33 @@ import { PomodoroContext } from './PomodoroContext';
 import FullWidthRenderer from './components/FullWidthRenderer';
 
 
-
 function Grid(props) {
     const { themes } = props;
     const { rowData, updateTaskName } = useContext(PomodoroContext);
 
     // task name, priority, start time, end time, type of pomodoro, timer, progress
     const columnDefs = [
-        { field: 'id' },
+        // { field: 'id' },
+        {
+            field: "action",
+            cellRendererSelector: ({ data }) => {
+                return data.task ? { component: ActionCellRenderer, params: { themes } } : undefined;
+            },
+            maxWidth: 200,
+            cellStyle: {
+                backgroundColor: '#ffffff1a',
+                fontWeight: 'bold',
+                fontSize: '24px'
+            },
+        },
         {
             field: "task",
             // editable: true,
 
-        
+
             valueFormatter: (params) => {
                 // if (!value) { return 'enter value...' }
-                if(params.data.taskNo) {
+                if (params.data.taskNo) {
                     return `${params.value} (${params.data.taskNo})`
                 }
                 return params.value;
@@ -35,27 +46,20 @@ function Grid(props) {
             //     }
             // }
         },
-        {
-            field: "action",
-            cellRendererSelector: ({ data }) => {
-                return data.task ? { frameworkComponent: ActionCellRenderer, params: { themes } } : undefined;
-            },
-            maxWidth:200,
-            cellStyle: {
-                backgroundColor: '#ffffff1a',
-                fontWeight: 'bold',
-                fontSize: '24px'
-            },
-        },
+
         {
             field: "timer",
+            maxWidth: 150,
+            valueGetter: ({ data }) => data.timeLeft,
+            sort: 'asc',
             cellRendererSelector: ({ data }) => {
-                return data.task ? { frameworkComponent: TimerCellRenderer, params: {} } : undefined;
+                return data.task ? { component: TimerCellRenderer, params: {} } : undefined;
             },
         },
         {
             headerName: "Start Time",
             field: "start_time",
+            maxWidth: 150,
             valueGetter: params => {
                 if (params.data.timerStarted) {
                     return new Date();
@@ -78,6 +82,7 @@ function Grid(props) {
         {
             headerName: 'End Time',
             field: "end_time",
+            maxWidth: 150,
             valueGetter: params => {
                 const startTime = params.getValue('start_time');
                 if (startTime) {
@@ -99,7 +104,7 @@ function Grid(props) {
         //     field: 'completed',
         //     minWidth: 300,
         //     cellRendererSelector: ({ data }) => {
-        //         return data.task ? { frameworkComponent: PomodoroActionsRenderer, params: { themes } } : undefined;
+        //         return data.task ? { component: PomodoroActionsRenderer, params: { themes } } : undefined;
         //     },
         //     cellStyle: {
         //         backgroundColor: '#ffffff1a',
@@ -110,7 +115,7 @@ function Grid(props) {
         // {
         //     field: 'type', minWidth: 350,
         //     cellRendererSelector: ({ data }) => {
-        //         return data.task ? { frameworkComponent: TypeCellRenderer, params: {} } : undefined;
+        //         return data.task ? { component: TypeCellRenderer, params: {} } : undefined;
         //     },
         //     cellClassRules: {
         //         'shade-cell': ({ node }) => {
@@ -176,12 +181,12 @@ function Grid(props) {
                     ref={gridRef}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
-                    reactUi={true}
                     immutableData={true}
-                    fullWidthCellRendererFramework={FullWidthRenderer}
+                    fullWidthCellRenderer={FullWidthRenderer}
                     fullWidthCellRendererParams={{ themes }}
                     isFullWidthCell={(node) => node.rowPinned === 'bottom'}
                     getRowStyle={getRowStyle}
+                    animateRows={true}
                     getRowNodeId={data => data.id}
                     getRowHeight={(params) => params.node.rowPinned === 'bottom' ? 82 : 42}
                     pinnedBottomRowData={[{}]}
