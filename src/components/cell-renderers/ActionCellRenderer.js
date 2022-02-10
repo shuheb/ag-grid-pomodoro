@@ -5,12 +5,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-import { Alert, Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Alert } from '@mui/material';
 const ActionCellRenderer = memo((props) => {
-    const { startTimer, stopTimer, currentRow, rowData, deletePomodoro, markAsComplete } = useContext(PomodoroContext);
-    const { themes } = props;
-    const type = 'pomodoro'
-    const { background } = themes[type]
+    const { startTimer, stopTimer, rowData, deletePomodoro, markAsComplete } = useContext(PomodoroContext);
     const { timerStarted, id, timeLeft, completed, } = props.node.data;
     const onClickHandler = () => {
         if (timerStarted) {

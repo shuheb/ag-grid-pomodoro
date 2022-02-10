@@ -4,6 +4,15 @@
 @import '~ag-grid-community/dist/styles/ag-grid.css';
 @import '~ag-grid-community/dist/styles/ag-theme-alpine.css';
 
+.ag-theme-alpine .ag-cell[col-id="timer"] {
+// background-color: khaki;
+// padding: 0px 17px;
+}
+
+// .ag-theme-alpine .ag-cell[col-id="timer"] > div {
+//   display: flex;
+//   align-items: center;
+//   }
 .p-background {
   text-align: center;
   display: flex;
@@ -63,13 +72,6 @@
   color:gray;
 }
 
-
-
-.p-timer {
-  font-size: 25px;
-  font-weight: bold;
-  // margin: 10px;
-}
 
 .p-title-item {
 
