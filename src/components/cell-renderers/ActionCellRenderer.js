@@ -1,55 +1,49 @@
-import { memo, useContext } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { PomodoroContext } from '../../PomodoroContext';
 import { IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-import { Alert } from '@mui/material';
+
 const ActionCellRenderer = memo((props) => {
     const { startTimer, stopTimer, rowData, deletePomodoro, markAsComplete } = useContext(PomodoroContext);
     const { timerStarted, id, timeLeft, completed, } = props.node.data;
-    const onClickHandler = () => {
+
+    const toggleTimer = () => {
         if (timerStarted) {
             stopTimer({ id, timeLeft });
         }
         else { startTimer({ id }) }
     }
-    const isStartButtonDisabled = () => {
-        if (completed) {
-            return true;
+
+    const completeTask = () => {
+        if (timerStarted) {
+            props.api.showLoadingOverlay();
+            setTimeout(() => {
+                props.api.hideOverlay();
+            }, 3000)
+            return;
         }
-        if (rowData) {
-            const timerRunningOnRow = rowData.filter((row) => (row.timerStarted && row.id !== id));
-            if (timerRunningOnRow.length > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-    const isDeleteButtonDisabled = () => {
-        if (rowData) {
-            const timerRunningOnRow = rowData.filter((row) => (row.timerStarted && row.id !== id));
-            if (timerRunningOnRow.length > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+        markAsComplete({ id })
     }
 
-    const isCompleteButtonDisabled = () => {
-        if (completed) {
-            return true;
+    const deleteTask = () => {
+        if (timerStarted) {
+            props.api.showLoadingOverlay();
+
+            setTimeout(() => {
+                props.api.hideOverlay();
+            }, 3000)
+            return;
         }
+        deletePomodoro({ id })
+    }
+    const isButtonDisabled = () => {
         if (rowData) {
-            const timerRunningOnRow = rowData.filter((row) => (row.timerStarted && row.id !== id));
-            if (timerRunningOnRow.length > 0) {
+            const activeTimers = rowData.filter((row) => (row.timerStarted && row.id !== id));
+            const isTimerActive = activeTimers.length > 0;
+            if (isTimerActive) {
                 return true;
             } else {
                 return false;
@@ -65,31 +59,17 @@ const ActionCellRenderer = memo((props) => {
                 color: 'white',
             }}
             size="small"
-            onClick={onClickHandler}
-            disabled={isStartButtonDisabled()}
-            >
+            onClick={toggleTimer}
+            disabled={completed ? true : isButtonDisabled()}
+        >
             {timerStarted ? <StopIcon fontSize="large" /> : <PlayArrowIcon fontSize="large" />}
         </IconButton>
-        {/* <button
-            className="p-button"
-            disabled={isStartButtonDisabled()}
-            style={{ color: background }}
-            onClick={onClickHandler}>
-            {timerStarted ? 'STOP' : 'START'}
-        </button> */}
         <IconButton
             sx={{
                 color: 'white',
             }}
-            disabled={isCompleteButtonDisabled()}
-            onClick={() => {
-                if (timerStarted) {
-                    alert('The timer is still running, stop timer before switching.')
-                    return;
-                }
-                markAsComplete({ id })
-            }}
-            aria-label="delete"
+            disabled={completed ? true : isButtonDisabled()}
+            onClick={completeTask}
             size="small">
             <CheckCircleIcon fontSize="large" />
         </IconButton>
@@ -97,16 +77,9 @@ const ActionCellRenderer = memo((props) => {
             sx={{
                 color: 'white',
             }}
-            aria-label="delete"
-            disabled={isDeleteButtonDisabled()}
+            disabled={isButtonDisabled()}
             size="small"
-            onClick={() => {
-                if (timerStarted) {
-                    alert('The timer is still running, stop timer before switching.')
-                    return;
-                }
-                deletePomodoro({ id })
-            }}
+            onClick={deleteTask}
         >
             <DeleteIcon fontSize="large" />
         </IconButton>
