@@ -4,15 +4,10 @@
 @import '~ag-grid-community/dist/styles/ag-grid.css';
 @import '~ag-grid-community/dist/styles/ag-theme-alpine.css';
 
-.ag-theme-alpine .ag-cell[col-id="timer"] {
-// background-color: khaki;
-// padding: 0px 17px;
+html,body, #root {
+  width:100%
 }
 
-// .ag-theme-alpine .ag-cell[col-id="timer"] > div {
-//   display: flex;
-//   align-items: center;
-//   }
 .p-background {
   text-align: center;
   display: flex;
@@ -31,14 +26,7 @@
     max-width: 620px;
 }
 
-.p-title {
-  padding-bottom: 20px;
-}
 
-// .show-container {
-//   background-color: #fffffffa;
-//   border-radius: 10px;
-// }
 
 .task-container {
   background-color: #fffffffa;
@@ -50,83 +38,17 @@
     text-align: left;
 }
 
-.p-background.red {
-  background-color: rgb(217, 85, 80);
-}
-
-.p-background.green {
-  background-color: rgb(76, 145, 149);
-}
-.p-background.blue {
-  background-color: rgb(69, 124, 163);
-}
-
-.shade-cell {
-  background-color: #ffffff1a;
-  // color:white;
-  font-weight: bold;
-  font-size: 24px;
-}
-
-.gray-cell {
-  color:gray;
-}
 
 
-.p-title-item {
 
-    border: none;
-    color: white;
-    margin: 0px;
-    border-radius: 4px;
-    font-size: 16px;
-    padding: 2px 12px;
-    height: 28px;
-    cursor: pointer;
-    background: none;
-    box-shadow: none;
-    font-weight: 300;
 
-}
 
 .btn-container {
-  // height: 400px;
-  // width: 100%;
-  // display: flex;
-  // align-items: center;
-  // justify-content: center;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-    // height: 61px;
     align-items: center;
     height: 100%;
-}
-.p-button {
-    cursor: pointer;
-    border: none;
-    margin: 7px;
-    border-radius: 4px;
-    font-size: 15px;
-    height: 25px;
-    font-weight: bold;
-    width: 90px;
-    background-color: white;
-    transition: color 0.5s ease-in-out 0s;
-
-}
-.p-button:disabled {
-  background-color: rgba(239, 239, 239, 0.3);
-  pointer-events: none;
-  // background-color: #ff0000;
-}
-
-.p-title-item.active {
- 
-    background: none rgba(0, 0, 0, 0.15);
-    opacity: 1;
-    font-weight: bold;
-
 }
 
 
