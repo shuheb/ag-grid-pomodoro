@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext } from 'react';
 import { PomodoroContext } from '../../PomodoroContext';
 import { IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -9,7 +9,7 @@ import StopIcon from '@mui/icons-material/Stop';
 const ActionCellRenderer = memo((props) => {
     const { startTimer, stopTimer, rowData, deletePomodoro, markAsComplete } = useContext(PomodoroContext);
     const { timerStarted, id, timeLeft, completed, } = props.node.data;
-
+    // start and stop the timer for the active task
     const toggleTimer = () => {
         if (timerStarted) {
             stopTimer({ id, timeLeft });
@@ -17,6 +17,8 @@ const ActionCellRenderer = memo((props) => {
         else { startTimer({ id }) }
     }
 
+    // dispatch an action to mark the active task as complete
+    // if the timer is active, then display loading overlay
     const completeTask = () => {
         if (timerStarted) {
             props.api.showLoadingOverlay();
@@ -28,6 +30,8 @@ const ActionCellRenderer = memo((props) => {
         markAsComplete({ id })
     }
 
+     // dispatch an action to delete active task
+    // if the timer is active, then display loading overlay
     const deleteTask = () => {
         if (timerStarted) {
             props.api.showLoadingOverlay();
@@ -39,6 +43,8 @@ const ActionCellRenderer = memo((props) => {
         }
         deletePomodoro({ id })
     }
+
+    // button is disabled if there exists a timer running for a task
     const isButtonDisabled = () => {
         if (rowData) {
             const activeTimers = rowData.filter((row) => (row.timerStarted && row.id !== id));

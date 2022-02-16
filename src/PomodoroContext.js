@@ -1,7 +1,7 @@
 import initialState from "./initialState";
 import { useReducer, createContext, useCallback } from 'react';
 
-import { START_TIMER, STOP_TIMER, ADD_TASK, PERSIST_SECONDS, REMOVE_CURRENT_TIMER, MARK_AS_COMPLETE, DELETE_POMODORO } from "./ActionCreators";
+import { START_TIMER, STOP_TIMER, ADD_TASK, PERSIST_SECONDS, RESET_ACTIVE_TASK, MARK_AS_COMPLETE, DELETE_POMODORO } from "./ActionCreators";
 import { v4 as generateId } from 'uuid';
 
 
@@ -12,7 +12,7 @@ const reducer = (state = {}, action) => {
     switch (action.type) {
         case START_TIMER:
             return {
-                ...state, currentRow: action.payload.id, rowData: state.rowData.map(row => {
+                ...state, activeTaskId: action.payload.id, rowData: state.rowData.map(row => {
                     if (row.id !== action.payload.id) return row;
                     return { ...row, timerStarted: true };
                 })
@@ -37,7 +37,7 @@ const reducer = (state = {}, action) => {
                 }]
             }
         case DELETE_POMODORO:
-            return { ...state, currentRow: -1, rowData: state.rowData.filter((row) => row.id !== action.payload.id) };
+            return { ...state, activeTaskId: -1, rowData: state.rowData.filter((row) => row.id !== action.payload.id) };
         case MARK_AS_COMPLETE:
             return {
                 ...state, rowData: state.rowData.map(row => {
@@ -52,8 +52,8 @@ const reducer = (state = {}, action) => {
                     return { ...row, timeLeft: action.payload.timeLeft }
                 })
             }
-        case REMOVE_CURRENT_TIMER:
-            return { ...state, currentRow: -1 }
+        case RESET_ACTIVE_TASK:
+            return { ...state, activeTaskId: -1 }
         default:
             return state;
     }
@@ -68,7 +68,7 @@ export const PomodoroProvider = ({ children }) => {
         return initial;
     });
 
-    const { rowData, currentRow } = state;
+    const { rowData, activeTaskId } = state;
     const startTimer = useCallback(({ id }) => {
         dispatch({
             type: START_TIMER,
@@ -129,16 +129,13 @@ export const PomodoroProvider = ({ children }) => {
         });
     }, [dispatch]);
 
-    const removeCurrentTimer = useCallback(({ id }) => {
+    const resetActiveTask = useCallback(() => {
         dispatch({
-            type: REMOVE_CURRENT_TIMER,
-            payload: {
-                id
-            }
+            type: RESET_ACTIVE_TASK
         })
     }, [dispatch])
 
-    const value = { rowData, currentRow, startTimer, stopTimer, addTask, persistSeconds, markAsComplete, deletePomodoro, removeCurrentTimer };
+    const value = { rowData, activeTaskId, startTimer, stopTimer, addTask, persistSeconds, markAsComplete, deletePomodoro, resetActiveTask };
 
     return (<PomodoroContext.Provider value={value}>
         {children}

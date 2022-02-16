@@ -1,15 +1,17 @@
 import React, { useContext, memo, useState } from 'react';
-import { PomodoroContext } from '../PomodoroContext';
+import { PomodoroContext } from '../../PomodoroContext';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import { Box, MenuItem, Button, TextField } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+
 const FullWidthRenderer = memo((props) => {
-    const { addTask, rowData, currentRow } = useContext(PomodoroContext);
+    const { addTask, rowData, activeTaskId } = useContext(PomodoroContext);
     const [pomodoroCount, setPomodoroCount] = useState(1);
     const [task, setTask] = useState("");
     const [error, setError] = useState(false);
 
-    const onSubmitHandler = (e) => {
+    // dispatch an action to add a new tasks with the task and required pomodoro timers
+    const addTaskHandler = (e) => {
         if (task.length < 1) {
             setError(true)
         } else {
@@ -67,31 +69,11 @@ const FullWidthRenderer = memo((props) => {
                     size='large'
                     color="primary"
                     startIcon={<AddTaskIcon />}
-                    onClick={onSubmitHandler}
+                    onClick={addTaskHandler}
                 >
                     Add Task
                 </Button>
             </Box>
-            {/* <input type="text" placeholder='what are you working on?' value={task} onChange={(e) => setTask(e.target.value)} />
-                {error && (<span>task cannot be empty.</span>)} */}
-
-            {/* <select value={pomodoroCount} onChange={(e) => setPomodoroCount(e.target.value)}>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                </select>
-
-
-                <button>Add Task</button> */}
-            {/* <form style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-evenly',
-            }}
-                onSubmit={onSubmitHandler}
-            >
-            </form> */}
         </div>
         <div style={{ width: '20%', display: 'flex', height: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
@@ -102,7 +84,8 @@ const FullWidthRenderer = memo((props) => {
                     sx={{ mx: 3 }}
                     startIcon={<SaveIcon /> }
                     onClick={() => {
-                        localStorage.setItem('gridState', JSON.stringify({ rowData, currentRow }))
+                        
+                        localStorage.setItem('gridState', JSON.stringify({ rowData, activeTaskId }))
                     }}
                 >
                     Save to Local Storage
@@ -111,17 +94,5 @@ const FullWidthRenderer = memo((props) => {
         </div>
     </div>)
 })
-
-// const StatusBar = (props) => {
-//     const { addTask } = useContext(PomodoroContext)
-//     return (
-
-//         <div className="ag-status-name-value">
-
-//             <button onClick={() => addTask()}>Add Task</button>
-//         </div>
-//     );
-
-// };
 
 export default FullWidthRenderer;
