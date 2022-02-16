@@ -6,14 +6,14 @@ html,body, #root {
   height:100%
 }
 
-.p-background {
+.main-task-background {
   text-align: center;
   display: flex;
   justify-content: center;
   transition: background-color 0.5s;
 }
 
-.p-container {
+.main-task-container {
   background-color: rgba(255, 255, 255, 0.1);
     padding: 30px 20px;
     width: 400px;
@@ -22,22 +22,13 @@ html,body, #root {
     max-width: 620px;
 }
 
-
-
 .task-container {
   background-color: #fffffffa;
-  // background-color: #00000060;
     opacity: 1;
     padding: 10px 10px;
     border-radius: 10px;
-    // margin: 30px 0px;
     text-align: left;
 }
-
-
-
-
-
 
 .btn-container {
   display: flex;
@@ -47,11 +38,3 @@ html,body, #root {
     height: 100%;
 }
 
-
-// .grid-container {
-//   height: 100%;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   // margin: 50px;
-// }

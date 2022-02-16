@@ -1,20 +1,31 @@
-import initialState from "../initialState";
 import { useReducer, createContext, useCallback } from 'react';
-
 import { START_TIMER, STOP_TIMER, ADD_TASK, PERSIST_SECONDS, RESET_ACTIVE_TASK, MARK_AS_COMPLETE, DELETE_POMODORO } from "../actions/ActionCreators";
 import { v4 as generateId } from 'uuid';
 import reducer from "../reducers/reducer";
 
 export const PomodoroContext = createContext();
 
+const initialState = {
+    rowData: [],
+    activeTaskId: -1
+};
+
+/**
+ * Before the Grid Component is rendered, check if there is any saved data in local storage and initialise
+ * the state with it.
+ * Alternatively, you can implement this logic inside the onGridReady event on the Grid Component
+ */
+const init = (initial) => {
+    console.log(initial)
+    const gridState = JSON.parse(localStorage.getItem('gridState'));
+    if (gridState) {
+        return gridState;
+    }
+    return initial;
+}
+
 export const PomodoroProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, initialState, (initial) => {
-        const gridState = JSON.parse(localStorage.getItem('gridState'));
-        if (gridState) {
-            return gridState;
-        }
-        return initial;
-    });
+    const [state, dispatch] = useReducer(reducer, initialState, init);
 
     const { rowData, activeTaskId } = state;
     const startTimer = useCallback(({ id }) => {

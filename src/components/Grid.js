@@ -43,7 +43,7 @@ function Grid(props) {
             maxWidth: 200,
             type: 'grayColumn',
             cellRendererSelector: ({ data }) => {
-                return data.task ? { component: ActionCellRenderer, params: { themes } } : undefined;
+                return data.task ? { component: ActionCellRenderer } : undefined;
             },
             pinned: 'left'
         },
@@ -136,7 +136,6 @@ function Grid(props) {
                     defaultColDef={defaultColDef}
                     immutableData={true}
                     fullWidthCellRenderer={FullWidthRenderer}
-                    fullWidthCellRendererParams={{ themes }}
                     isFullWidthCell={(node) => node.rowPinned === 'bottom'}
                     getRowStyle={getRowStyle}
                     animateRows={true}

@@ -45,8 +45,8 @@ const MainTaskComponent = memo((props) => {
   }, [activeTaskId])
 
   const value = { timeLeft, id, task, timerStarted, completed };
-  return (<div className="p-background" style={{ backgroundColor: themes[pomodoroType].background }} >
-    <div className="p-container">
+  return (<div className="main-task-background" style={{ backgroundColor: themes[pomodoroType].background }} >
+    <div className="main-task-container">
       <TaskTypeComponent timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
       <TaskDetailsComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task ? `${task} (${taskNo})` : undefined} />
       <TaskTimerComponent value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} theme={themes[pomodoroType]} />
