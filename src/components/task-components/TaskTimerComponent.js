@@ -56,7 +56,6 @@ const TaskTimerComponent = memo((props) => {
     return () => {
       if (timer) { clearInterval(timer); };
     }
-    // eslint-disable-next-line
   }, [stateTimerStarted]);
 
   // when the timer reaches 0, set stateTimerStarted=false, so that the timer will stop

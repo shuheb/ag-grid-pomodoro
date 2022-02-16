@@ -1,49 +1,48 @@
 import { useState, useEffect, useContext, memo } from 'react';
-import { PomodoroContext } from '../PomodoroContext';
+import { PomodoroContext } from '../context/PomodoroContext';
 import TaskTypeComponent from './task-components/TaskTypeComponent';
 import TaskDetailsComponent from './task-components/TaskDetailsComponent';
 import TaskTimerComponent from './task-components/TaskTimerComponent';
 
 const MainTaskComponent = memo((props) => {
-  // console.log('MainTaskComponent')
-  const { currentRow, rowData, removeCurrentTimer, stopTimer, startTimer } = useContext(PomodoroContext);
-  const [rowInfo, setRowInfo] = useState(null);
-  const [pomodoroType, setPomodoroType] = useState('short_break');
-  const { timeLeft, id, task, taskNo, timerStarted, completed } = rowInfo ? rowInfo : {};
+  const { activeTaskId, rowData, resetActiveTask, stopTimer, startTimer } = useContext(PomodoroContext);
+  const [activeTask, setActiveTask] = useState(null);
+  const [pomodoroType, setPomodoroType] = useState('pomodoro');
+  const { timeLeft, id, task, taskNo, timerStarted, completed } = activeTask ? activeTask : {};
   const { themes } = props;
 
-  // use case: when timer has finished, move to short_break tyoe
+  // if there is an active task, i.e. the timer is running, then store the data inside the activeTask hook
+  useEffect(() => {
+    if (activeTaskId !== -1) {
+      setActiveTask(rowData.filter(row => row.id === activeTaskId)[0])
+    } else {
+      setActiveTask({})
+    }
+  }, [activeTaskId, rowData]);
+
+  // when task is completed i.e. timer has reached 0 seconds or via button, show the short break option
   useEffect(() => {
     if (completed) {
-      removeCurrentTimer({ id });
       setPomodoroType('short_break')
-
     }
-  }, [completed])
+  }, [completed, resetActiveTask])
 
+  // if type is changed from pomodoro to short break or long break, reset the active task 
   useEffect(() => {
     if (id && (pomodoroType === "long_break" || pomodoroType === "short_break")) {
-      removeCurrentTimer({ id });
-      // setRowInfo({})
+      resetActiveTask();
     }
-  }, [pomodoroType])
+  }, [pomodoroType, id, resetActiveTask])
 
-  useEffect(() => {
 
-    if (currentRow !== -1) {
-      setRowInfo(rowData.filter(row => row.id === currentRow)[0])
-    } else {
-      setRowInfo({})
-    }
-  }, [currentRow, rowData]);
 
   // use case: when we are looking at a grid timer, always start with pomodoro, otherwise
   // if user is looking at short/long break, that style will stay
   useEffect(() => {
-    if (currentRow !== -1) {
+    if (activeTaskId !== -1) {
       setPomodoroType('pomodoro')
     }
-  }, [currentRow])
+  }, [activeTaskId])
 
   const value = { timeLeft, id, task, timerStarted, completed };
   return (<div className="p-background" style={{ backgroundColor: themes[pomodoroType].background }} >

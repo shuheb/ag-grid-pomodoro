@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useState, useEffect, memo, useContext } from 'react';
-import { PomodoroContext } from '../../PomodoroContext';
+import { PomodoroContext } from '../../context/PomodoroContext';
 import { formatSecondsIntoMinutesAndSeconds } from '../../utils/date';
 
 // https://mui.com/components/progress/#circular-with-label
@@ -46,8 +46,7 @@ const TimerCellRenderer = memo(props => {
     if (!timerStarted && seconds && seconds < timeLeft) {
       persistSeconds({ id, timeLeft: seconds })
     };
-    // eslint-disable-next-line
-  }, [timerStarted]);
+  }, [timerStarted, persistSeconds, id]);
 
   // start ticking the timer by decrementing every second
   // if seconds reaches 0, then stop the timer and mark the task as completed
@@ -70,7 +69,7 @@ const TimerCellRenderer = memo(props => {
 
   // format the seconds into minutes and seconds
   let timeString = formatSecondsIntoMinutesAndSeconds(seconds);
-  
+
   return (<div style={{
     display: 'flex',
     alignItems: 'center'

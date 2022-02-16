@@ -15,7 +15,6 @@ function padStartWithZeros(value, totalStringSize) {
 }
 
 export function formatSecondsIntoMinutesAndSeconds(value) {
-    console.log('called')
     const seconds = padStartWithZeros(value % 60, 2);
     const minutes = padStartWithZeros(Math.floor(value / 60), 2);
     return [minutes, seconds].join(':');

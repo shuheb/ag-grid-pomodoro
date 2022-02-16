@@ -5,7 +5,7 @@ import '../App.scss';
 import { AgGridReact } from 'ag-grid-react';
 import ActionCellRenderer from './cell-renderers/ActionCellRenderer';
 import TimerCellRenderer from './cell-renderers/TimerCellRenderer';
-import { PomodoroContext } from '../PomodoroContext';
+import { PomodoroContext } from '../context/PomodoroContext';
 import FullWidthRenderer from './cell-renderers/FullWidthRenderer';
 import { serialiseDate } from '../utils/date';
 
@@ -42,10 +42,9 @@ function Grid(props) {
             field: "action",
             maxWidth: 200,
             type: 'grayColumn',
-            cellRenderer: ActionCellRenderer,
-            // cellRendererSelector: ({ data }) => {
-            //     return data.task ? { component: ActionCellRenderer, params: { themes } } : undefined;
-            // },
+            cellRendererSelector: ({ data }) => {
+                return data.task ? { component: ActionCellRenderer, params: { themes } } : undefined;
+            },
             pinned: 'left'
         },
         {
@@ -66,10 +65,9 @@ function Grid(props) {
             minWidth: 200,
             valueGetter: ({ data }) => data.timeLeft,
             sort: 'asc',
-            cellRenderer: TimerCellRenderer,
-            // cellRendererSelector: ({ data }) => {
-            //     return data.task ? { component: TimerCellRenderer, params: {} } : undefined;
-            // },
+            cellRendererSelector: ({ data }) => {
+                return data.task ? { component: TimerCellRenderer, params: {} } : undefined;
+            },
 
         },
         {

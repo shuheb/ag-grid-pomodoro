@@ -1,5 +1,5 @@
 import { memo, useContext } from 'react';
-import { PomodoroContext } from '../../PomodoroContext';
+import { PomodoroContext } from '../../context/PomodoroContext';
 import { IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';

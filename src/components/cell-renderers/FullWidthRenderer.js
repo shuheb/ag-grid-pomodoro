@@ -1,5 +1,5 @@
 import React, { useContext, memo, useState } from 'react';
-import { PomodoroContext } from '../../PomodoroContext';
+import { PomodoroContext } from '../../context/PomodoroContext';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import { Box, MenuItem, Button, TextField } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -82,9 +82,20 @@ const FullWidthRenderer = memo((props) => {
                     size='large'
                     color="primary"
                     sx={{ mx: 3 }}
-                    startIcon={<SaveIcon /> }
+                    startIcon={<SaveIcon />}
                     onClick={() => {
-                        
+                        if (activeTaskId) {
+                            let activeTask = rowData.filter(row => row.id === activeTaskId);
+                            if (activeTask.length > 0) {
+                                if (activeTask[0].timerStarted) {
+                                    props.api.showLoadingOverlay();
+                                    setTimeout(() => {
+                                        props.api.hideOverlay();
+                                    }, 3000);
+                                    return;
+                                }
+                            }
+                        }
                         localStorage.setItem('gridState', JSON.stringify({ rowData, activeTaskId }))
                     }}
                 >

@@ -1,8 +1,8 @@
 import './App.scss';
 import MainTaskComponent from './components/MainTaskComponent';
 import Grid from './components/Grid';
-import { PomodoroProvider } from './PomodoroContext';
 import { useMemo } from 'react';
+import { PomodoroProvider } from './context/PomodoroContext';
 
 
 
