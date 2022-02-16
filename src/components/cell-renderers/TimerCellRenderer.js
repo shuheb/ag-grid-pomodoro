@@ -1,6 +1,7 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useState, useEffect, memo, useContext } from 'react';
 import { PomodoroContext } from '../../PomodoroContext';
+import { formatSecondsIntoMinutesAndSeconds } from '../../utils/date';
 
 // https://mui.com/components/progress/#circular-with-label
 function CircularProgressWithLabel(props) {
@@ -37,21 +38,22 @@ const ProgressComponent = memo(props => {
 
 const TimerCellRenderer = memo(props => {
   const { stopTimer, persistSeconds, markAsComplete } = useContext(PomodoroContext);
-  const { id, timerStarted, timeLeft } = props.node.data;
+  const { id, timerStarted, timeLeft, completed } = props.node.data;
   const [seconds, setSeconds] = useState(timeLeft);
 
-  // when timer is stopped, get the current seconds left for the row and persist it to the store
+  // when timer is stopped, get timeLeft for the active task and persist it to the store
   useEffect(() => {
     if (!timerStarted && seconds && seconds < timeLeft) {
       persistSeconds({ id, timeLeft: seconds })
     };
+    // eslint-disable-next-line
   }, [timerStarted]);
 
-  // start ticking the timer by decrementing seconds by 1 every second
+  // start ticking the timer by decrementing every second
   // if seconds reaches 0, then stop the timer and mark the task as completed
   useEffect(() => {
     let timer;
-    if (seconds === 0) {
+    if (seconds === 0 && !completed) {
       stopTimer({ id });
       markAsComplete({ id });
     }
@@ -64,22 +66,26 @@ const TimerCellRenderer = memo(props => {
     return () => {
       if (timer) { clearInterval(timer); };
     }
-  }, [seconds, timerStarted, id, stopTimer, markAsComplete])
+  }, [seconds, timerStarted, id, stopTimer, markAsComplete, completed]);
 
-  const secondsToShow = (seconds % 60) < 10 ? `0${seconds % 60}` : seconds % 60;
-  const minutesToShow = Math.floor(seconds / 60) < 10 ? `0${Math.floor(seconds / 60)}` : Math.floor(seconds / 60);
-
+  // format the seconds into minutes and seconds
+  let timeString = formatSecondsIntoMinutesAndSeconds(seconds);
+  
   return (<div style={{
-    width: '100%'
+    display: 'flex',
+    alignItems: 'center'
   }}>
     <div
       style={{
         fontSize: '25px',
         fontWeight: 'bold'
       }}>
-      {`${minutesToShow}:${secondsToShow}`}
+      {timeString}
     </div>
-    <div style={{ marginLeft: 'auto' }}><ProgressComponent timeLeft={seconds} /></div>
+    <div style={{
+      marginLeft: 'auto'
+    }}>
+      <ProgressComponent timeLeft={seconds} /></div>
   </div>)
 
 });
