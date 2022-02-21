@@ -16,7 +16,6 @@ const initialState = {
  * Alternatively, you can implement this logic inside the onGridReady event on the Grid Component
  */
 const init = (initial) => {
-    console.log(initial)
     const gridState = JSON.parse(localStorage.getItem('gridState'));
     if (gridState) {
         return gridState;
@@ -37,24 +36,24 @@ export const PomodoroProvider = ({ children }) => {
         });
     }, [dispatch]);
 
-    const stopTimer = useCallback(({ id, timeLeft }) => {
+    const stopTimer = useCallback(({ id }) => {
         dispatch({
             type: STOP_TIMER,
             payload: {
-                id,
-                timeLeft
+                id
             },
         });
     }, [dispatch]);
 
-    const addTask = useCallback(({ task, taskNo }) => {
+    const addTask = useCallback(({ task, taskNo, taskCount }) => {
 
         dispatch({
             type: ADD_TASK,
             payload: {
                 id: generateId(),
                 task,
-                taskNo
+                taskNo,
+                taskCount
             },
         });
     }, [dispatch]);
@@ -94,9 +93,9 @@ export const PomodoroProvider = ({ children }) => {
         })
     }, [dispatch])
 
-    const value = { rowData, activeTaskId, startTimer, stopTimer, addTask, persistSeconds, markAsComplete, deletePomodoro, resetActiveTask };
+    const actions = { rowData, activeTaskId, startTimer, stopTimer, addTask, persistSeconds, markAsComplete, deletePomodoro, resetActiveTask };
 
-    return (<PomodoroContext.Provider value={value}>
+    return (<PomodoroContext.Provider value={actions}>
         {children}
     </PomodoroContext.Provider>
     );

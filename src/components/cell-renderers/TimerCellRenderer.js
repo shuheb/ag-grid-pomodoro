@@ -33,7 +33,7 @@ const ProgressComponent = memo(props => {
   // represent timeLeft as a percentage of the total time
   const minutes = Math.floor((((1500 - timeLeft) / 1500) * 100));
 
-  return (<CircularProgressWithLabel sx={{ color: 'white' }} value={minutes} />);
+  return (<CircularProgressWithLabel sx={{ color: 'white' }} value={100} />);
 });
 
 const TimerCellRenderer = memo(props => {
@@ -70,10 +70,7 @@ const TimerCellRenderer = memo(props => {
   // format the seconds into minutes and seconds
   let timeString = formatSecondsIntoMinutesAndSeconds(seconds);
 
-  return (<div style={{
-    display: 'flex',
-    alignItems: 'center'
-  }}>
+  return (<>
     <div
       style={{
         fontSize: '25px',
@@ -81,11 +78,8 @@ const TimerCellRenderer = memo(props => {
       }}>
       {timeString}
     </div>
-    <div style={{
-      marginLeft: 'auto'
-    }}>
-      <ProgressComponent timeLeft={seconds} /></div>
-  </div>)
+    <ProgressComponent timeLeft={seconds} />
+  </>)
 
 });
 

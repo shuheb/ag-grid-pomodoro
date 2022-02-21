@@ -33,7 +33,7 @@ const TaskTypeComponent = memo((props) => {
         <ToggleButton value="short_break">Short Break</ToggleButton>
         <ToggleButton value="long_break">Long Break</ToggleButton>
       </ToggleButtonGroup>
-      {showAlert && <div style={{ paddingTop: 15 }}><Alert severity="warning">The timer is still running. - stop timer before switching</Alert></div>}
+      {showAlert && <div style={{ paddingTop: 15 }}><Alert severity="warning">Please stop the timer before clicking an action.</Alert></div>}
     </div>
   )
 

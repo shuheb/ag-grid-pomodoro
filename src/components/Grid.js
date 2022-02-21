@@ -1,15 +1,14 @@
 
 import React, { useContext, useCallback, useMemo } from 'react';
-import '../App.scss';
-
+import '../App.css';
 import { AgGridReact } from 'ag-grid-react';
 import ActionCellRenderer from './cell-renderers/ActionCellRenderer';
 import TimerCellRenderer from './cell-renderers/TimerCellRenderer';
 import { PomodoroContext } from '../context/PomodoroContext';
-import FullWidthRenderer from './cell-renderers/FullWidthRenderer';
+import AddTaskCellRenderer from './full-width-cell-renderers/AddTaskCellRenderer';
 import { serialiseDate } from '../utils/date';
-
-
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 function Grid(props) {
     const { themes } = props;
     const { rowData } = useContext(PomodoroContext);
@@ -25,6 +24,9 @@ function Grid(props) {
         'grayColumn': {
             cellStyle: {
                 backgroundColor: '#ffffff1a',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-around'
             },
         },
         'textColumn': {
@@ -51,11 +53,11 @@ function Grid(props) {
             field: "task",
             minWidth: 1000,
             type: 'textColumn',
-            valueFormatter: (params) => {
-                if (params.data.taskNo) {
-                    return `${params.value} (${params.data.taskNo})`
+            valueFormatter: ({ data, value }) => {
+                if (data.taskNo) {
+                    return `${value} (${data.taskNo}/${data.taskCount})`
                 }
-                return params.value;
+                return value;
             },
         },
         {
@@ -130,12 +132,13 @@ function Grid(props) {
         <div style={{ height: '50%', width: '100%' }}>
             <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
                 <AgGridReact
+                    ref={props.gridRef}
                     rowData={rowData}
                     columnTypes={columnTypes}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     immutableData={true}
-                    fullWidthCellRenderer={FullWidthRenderer}
+                    fullWidthCellRenderer={AddTaskCellRenderer}
                     isFullWidthCell={(node) => node.rowPinned === 'bottom'}
                     getRowStyle={getRowStyle}
                     animateRows={true}

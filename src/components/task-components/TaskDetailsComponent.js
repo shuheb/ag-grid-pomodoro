@@ -4,44 +4,27 @@ const TaskDetailsComponent = memo((props) => {
 
     const { pomodoroType, theme, task } = props;
 
-    const isPomodoroTask = pomodoroType === "pomodoro";
+    const isPomodoroTypeSelected = pomodoroType === "pomodoro";
 
-    const emoji = isPomodoroTask ? '📌' : '🕺';
+    const emoji = isPomodoroTypeSelected ? '📌' : '🕺';
 
     return (<div className='task-container' >
-        <div
-            style={{
-                color: theme.background,
-                fontSize: 20,
-            }}>
-
-            <span style={{
-                fontSize: 30,
-                paddingRight: '5px'
-            }}>
-                {emoji}
-            </span>
-            {isPomodoroTask ?
-                <span >
-                    <span
-                        style={{
-                            fontWeight: 'bold',
-                            fontSize: 24
-                        }}
-                    >
-                        {task ? "Working on" : "Time to work!"}
-                    </span>
-                    {task && (<div
-                    >
-                        {task}
-                    </div>)}
-                </span> :
-                <span
-                    style={{
-                        fontWeight: 'bold',
-                        fontSize: 24
-                    }}>Time for a break!</span>}
-        </div>
+        <span style={{
+            fontSize: 30,
+            paddingRight: '5px'
+        }}>
+            {emoji}
+        </span>
+        <span style={{ color: theme.background, fontWeight: 'bold', fontSize: 24 }}>
+            {isPomodoroTypeSelected ?
+                <>
+                    {task ? "Working on" : "Time to focus!"}
+                    {task && (<div style={{ fontWeight: 'normal', fontSize: 20 }}>{task}</div>)}
+                </>
+                :
+                "Time for a break!"
+            }
+        </span>
     </div >)
 });
 

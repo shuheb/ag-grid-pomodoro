@@ -2,10 +2,9 @@ import React, { useContext, memo, useState } from 'react';
 import { PomodoroContext } from '../../context/PomodoroContext';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import { Box, MenuItem, Button, TextField } from '@mui/material';
-import SaveIcon from '@mui/icons-material/Save';
 
-const FullWidthRenderer = memo((props) => {
-    const { addTask, rowData, activeTaskId } = useContext(PomodoroContext);
+const AddTaskCellRenderer = memo((props) => {
+    const { addTask } = useContext(PomodoroContext);
     const [pomodoroCount, setPomodoroCount] = useState(1);
     const [task, setTask] = useState("");
     const [error, setError] = useState(false);
@@ -16,7 +15,7 @@ const FullWidthRenderer = memo((props) => {
             setError(true)
         } else {
             for (let i = 0; i < pomodoroCount; i++) {
-                addTask({ task, taskNo: i + 1 })
+                addTask({ task, taskNo: i + 1, taskCount: pomodoroCount })
             };
             setError(false)
         }
@@ -26,9 +25,9 @@ const FullWidthRenderer = memo((props) => {
         style={{
             display: 'flex',
             height: '100%',
+            justifyContent: 'center'
         }}>
-        <div style={{ width: '20%' }}></div>
-        <div style={{ width: '60%', height: '100%', backgroundColor: '#ffffff1a', display: 'flex', alignItems: 'center' }}>
+        <div style={{ height: '100%', backgroundColor: '#ffffff1a', display: 'flex', alignItems: 'center' }}>
             <Box
                 component="form"
                 sx={{
@@ -75,35 +74,7 @@ const FullWidthRenderer = memo((props) => {
                 </Button>
             </Box>
         </div>
-        <div style={{ width: '20%', display: 'flex', height: '100%' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', width: '100%', alignItems: 'center' }}>
-                <Button
-                    variant="contained"
-                    size='large'
-                    color="primary"
-                    sx={{ mx: 3 }}
-                    startIcon={<SaveIcon />}
-                    onClick={() => {
-                        if (activeTaskId) {
-                            let activeTask = rowData.filter(row => row.id === activeTaskId);
-                            if (activeTask.length > 0) {
-                                if (activeTask[0].timerStarted) {
-                                    props.api.showLoadingOverlay();
-                                    setTimeout(() => {
-                                        props.api.hideOverlay();
-                                    }, 3000);
-                                    return;
-                                }
-                            }
-                        }
-                        localStorage.setItem('gridState', JSON.stringify({ rowData, activeTaskId }))
-                    }}
-                >
-                    Save to Local Storage
-                </Button>
-            </div>
-        </div>
     </div>)
 })
 
-export default FullWidthRenderer;
+export default AddTaskCellRenderer;

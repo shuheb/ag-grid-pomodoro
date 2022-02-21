@@ -30,7 +30,7 @@ const ActionCellRenderer = memo((props) => {
         markAsComplete({ id })
     }
 
-     // dispatch an action to delete active task
+    // dispatch an action to delete active task
     // if the timer is active, then display loading overlay
     const deleteTask = () => {
         if (timerStarted) {
@@ -59,7 +59,7 @@ const ActionCellRenderer = memo((props) => {
         }
     }
 
-    return (<div className="btn-container" >
+    return (<>
         <IconButton
             sx={{
                 color: 'white',
@@ -89,7 +89,7 @@ const ActionCellRenderer = memo((props) => {
         >
             <DeleteIcon fontSize="large" />
         </IconButton>
-    </div>)
+    </>)
 });
 
 export default ActionCellRenderer;

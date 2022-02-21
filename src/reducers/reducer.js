@@ -1,6 +1,6 @@
 import { START_TIMER, STOP_TIMER, ADD_TASK, PERSIST_SECONDS, RESET_ACTIVE_TASK, MARK_AS_COMPLETE, DELETE_POMODORO } from "../actions/ActionCreators";
 const reducer = (state = {}, action) => {
-    console.warn(`************* ${action.type} ${JSON.stringify(action.payload)} ***********`)
+    // console.warn(`************* ${action.type} ${JSON.stringify(action.payload)} ***********`)
     switch (action.type) {
         case START_TIMER:
             return {
@@ -23,6 +23,7 @@ const reducer = (state = {}, action) => {
                     id: action.payload.id,
                     task: action.payload.task,
                     taskNo: action.payload.taskNo,
+                    taskCount: action.payload.taskCount,
                     timerStarted: false,
                     completed: false,
                     timeLeft: 1500

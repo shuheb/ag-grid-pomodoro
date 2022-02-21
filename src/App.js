@@ -1,8 +1,8 @@
-import './App.scss';
+import './App.css';
 import MainTaskComponent from './components/MainTaskComponent';
-import Grid from './components/Grid';
 import { useMemo } from 'react';
 import { PomodoroProvider } from './context/PomodoroContext';
+import SaveLocalStorageButton from './components/SaveButton';
 
 const App = () => {
   const themes = useMemo(() => ({
@@ -29,7 +29,8 @@ const App = () => {
     <div style={{ height: '100%', width: '100%' }}>
       <PomodoroProvider>
         <MainTaskComponent themes={themes} />
-        <Grid themes={themes} />
+
+        <SaveLocalStorageButton themes={themes} />
       </PomodoroProvider>
     </div>
   );

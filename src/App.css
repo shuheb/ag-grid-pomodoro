@@ -1,11 +1,3 @@
-@import '~ag-grid-community/dist/styles/ag-grid.css';
-@import '~ag-grid-community/dist/styles/ag-theme-alpine.css';
-
-html,body, #root {
-  width:100%;
-  height:100%
-}
-
 .main-task-background {
   text-align: center;
   display: flex;
@@ -29,12 +21,3 @@ html,body, #root {
     border-radius: 10px;
     text-align: left;
 }
-
-.btn-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-    align-items: center;
-    height: 100%;
-}
-

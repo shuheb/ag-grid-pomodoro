@@ -8,7 +8,7 @@ const MainTaskComponent = memo((props) => {
   const { activeTaskId, rowData, resetActiveTask, stopTimer, startTimer } = useContext(PomodoroContext);
   const [activeTask, setActiveTask] = useState(null);
   const [pomodoroType, setPomodoroType] = useState('pomodoro');
-  const { timeLeft, id, task, taskNo, timerStarted, completed } = activeTask ? activeTask : {};
+  const { timeLeft, id, task, taskNo, taskCount, timerStarted, completed } = activeTask ? activeTask : {};
   const { themes } = props;
 
   // if there is an active task, i.e. the timer is running, then store the data inside the activeTask hook
@@ -36,8 +36,7 @@ const MainTaskComponent = memo((props) => {
 
 
 
-  // use case: when we are looking at a grid timer, always start with pomodoro, otherwise
-  // if user is looking at short/long break, that style will stay
+  // whenever there is no active task, i.e. a task from the grid is not active, then default to pomodoro option
   useEffect(() => {
     if (activeTaskId !== -1) {
       setPomodoroType('pomodoro')
@@ -48,7 +47,7 @@ const MainTaskComponent = memo((props) => {
   return (<div className="main-task-background" style={{ backgroundColor: themes[pomodoroType].background }} >
     <div className="main-task-container">
       <TaskTypeComponent timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
-      <TaskDetailsComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task ? `${task} (${taskNo})` : undefined} />
+      <TaskDetailsComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task ? `${task} (${taskNo}/${taskCount})` : undefined} />
       <TaskTimerComponent value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} theme={themes[pomodoroType]} />
     </div>
 
