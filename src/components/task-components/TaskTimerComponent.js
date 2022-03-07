@@ -4,7 +4,7 @@ import EndTimeComponent from './EndTimeComponent';
 
 const TaskTimerComponent = memo((props) => {
   const { pomodoroType, stopTimer, startTimer, theme } = props;
-  const { timeLeft, id, timerStarted, completed } = props.value || '';
+  const { timeLeft, id, timerStarted } = props.value || '';
   const [seconds, setSeconds] = useState(25 * 60);
   const [stateTimerStarted, setStateTimerStarted] = useState(false);
 
@@ -29,25 +29,17 @@ const TaskTimerComponent = memo((props) => {
   - a task from the grid is not active, therefore we show the default timer
   */
   useEffect(() => {
-    if (!timeLeft || completed) {
-      const newSeconds = pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : 25 * 60;
-      setSeconds(newSeconds)
-      setStateTimerStarted(false);
-    }
-
-    // if timeLeft exists, this means task from the grid is active.
-    // if short_break / long_break is selected, reset timer to adjust for this
-    if (timeLeft) {
-      const newSeconds = pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : timeLeft;
-      setSeconds(newSeconds)
-    }
-  }, [pomodoroType, completed]);
+    setSeconds(prev => {
+      return pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : 25 * 60;
+    })
+    setStateTimerStarted(false);
+  }, [pomodoroType]);
 
   // handle the timer logic
   useEffect(() => {
     let timer;
 
-    if (stateTimerStarted && seconds > 0) {
+    if (stateTimerStarted) {
       timer = setInterval(() => {
         setSeconds(prev => prev - 1)
       }, 1000);
@@ -66,7 +58,7 @@ const TaskTimerComponent = memo((props) => {
   }, [seconds])
 
   const timerString = formatSecondsIntoMinutesAndSeconds(seconds);
-  
+
   return (
     <div>
       <div style={{ color: 'white', fontWeight: 'bold', fontSize: 90, padding: '30px 0px' }}>{timerString}</div>

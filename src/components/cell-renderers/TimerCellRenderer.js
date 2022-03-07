@@ -33,30 +33,27 @@ const ProgressComponent = memo(props => {
   // represent timeLeft as a percentage of the total time
   const minutes = Math.floor((((1500 - timeLeft) / 1500) * 100));
 
-  return (<CircularProgressWithLabel sx={{ color: 'white' }} value={100} />);
+  return (<CircularProgressWithLabel sx={{ color: 'white' }} value={minutes} />);
 });
 
 const TimerCellRenderer = memo(props => {
   const { stopTimer, persistSeconds, markAsComplete } = useContext(PomodoroContext);
-  const { id, timerStarted, timeLeft, completed } = props.node.data;
+  const { id, timerStarted, timeLeft } = props.node.data;
   const [seconds, setSeconds] = useState(timeLeft);
 
-  // when timer is stopped, get timeLeft for the active task and persist it to the store
+  // when timer is stopped, get the time left for the active task and persist it to the store
   useEffect(() => {
-    if (!timerStarted && seconds && seconds < timeLeft) {
+    if (!timerStarted) {
       persistSeconds({ id, timeLeft: seconds })
     };
-  }, [timerStarted, persistSeconds, id]);
+  }, [timerStarted, persistSeconds, seconds, id]);
 
   // start ticking the timer by decrementing every second
   // if seconds reaches 0, then stop the timer and mark the task as completed
   useEffect(() => {
     let timer;
-    if (seconds === 0 && !completed) {
-      stopTimer({ id });
-      markAsComplete({ id });
-    }
-    else if (timerStarted && seconds > 0) {
+
+    if (timerStarted) {
       timer = setInterval(() => {
         setSeconds(prev => prev - 1)
       }, 1000);
@@ -65,7 +62,14 @@ const TimerCellRenderer = memo(props => {
     return () => {
       if (timer) { clearInterval(timer); };
     }
-  }, [seconds, timerStarted, id, stopTimer, markAsComplete, completed]);
+  }, [seconds, timerStarted]);
+
+  useEffect(() => {
+    if (seconds === 0) {
+      stopTimer({ id });
+      markAsComplete({ id });
+    }
+  }, [seconds, stopTimer, markAsComplete, id])
 
   // format the seconds into minutes and seconds
   let timeString = formatSecondsIntoMinutesAndSeconds(seconds);
