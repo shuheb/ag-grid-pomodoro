@@ -29,11 +29,19 @@ const TaskTimerComponent = memo((props) => {
   - a task from the grid is not active, therefore we show the default timer
   */
   useEffect(() => {
-    setSeconds(prev => {
-      return pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : 25 * 60;
-    })
-    setStateTimerStarted(false);
-  }, [pomodoroType]);
+    if (pomodoroType !== 'pomodoro') {
+      // console.log('id', id)
+      setSeconds(prev => {
+        return pomodoroType === "short_break" ? 5 * 60 : pomodoroType === "long_break" ? 15 * 60 : 25 * 60;
+      })
+      setStateTimerStarted(false);
+    } else {
+      if (id !== undefined) {
+      } else {
+        setSeconds(prev => 25 * 60);
+      }
+    }
+  }, [pomodoroType, id]);
 
   // handle the timer logic
   useEffect(() => {
@@ -58,7 +66,6 @@ const TaskTimerComponent = memo((props) => {
   }, [seconds])
 
   const timerString = formatSecondsIntoMinutesAndSeconds(seconds);
-
   return (
     <div>
       <div style={{ color: 'white', fontWeight: 'bold', fontSize: 90, padding: '30px 0px' }}>{timerString}</div>

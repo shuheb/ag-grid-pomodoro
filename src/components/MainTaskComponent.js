@@ -10,7 +10,7 @@ const MainTaskComponent = memo((props) => {
   const [pomodoroType, setPomodoroType] = useState('pomodoro');
   const { timeLeft, id, task, taskNo, taskCount, timerStarted, completed } = activeTask ? activeTask : {};
   const { themes } = props;
-
+  
   // if there is an active task, i.e. the timer is running, then store the data inside the activeTask hook
   useEffect(() => {
     if (activeTaskId !== -1) {
@@ -25,7 +25,7 @@ const MainTaskComponent = memo((props) => {
     if (completed) {
       setPomodoroType('short_break')
     }
-  }, [completed, resetActiveTask])
+  }, [completed])
 
   // if type is changed from pomodoro to short break or long break, reset the active task 
   useEffect(() => {
