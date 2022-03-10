@@ -4,19 +4,20 @@ import TaskTypeComponent from './task-components/TaskTypeComponent';
 import TaskDetailsComponent from './task-components/TaskDetailsComponent';
 import TaskTimerComponent from './task-components/TaskTimerComponent';
 
+const ACTIVE_TASK_DEFAULT = { id: -1, timeLeft: 1400, timerStarted: false }
+
 const MainTaskComponent = memo((props) => {
   const { activeTaskId, rowData, resetActiveTask, stopTimer, startTimer } = useContext(PomodoroContext);
-  const [activeTask, setActiveTask] = useState(null);
+  const [activeTask, setActiveTask] = useState(ACTIVE_TASK_DEFAULT);
   const [pomodoroType, setPomodoroType] = useState('pomodoro');
-  const { timeLeft, id, task, taskNo, taskCount, timerStarted, completed } = activeTask ? activeTask : {};
+  const { timeLeft, id, task, taskNo, taskCount, timerStarted, completed } = activeTask;
   const { themes } = props;
-  
   // if there is an active task, i.e. the timer is running, then store the data inside the activeTask hook
   useEffect(() => {
     if (activeTaskId !== -1) {
       setActiveTask(rowData.filter(row => row.id === activeTaskId)[0])
     } else {
-      setActiveTask({})
+
     }
   }, [activeTaskId, rowData]);
 
@@ -29,12 +30,24 @@ const MainTaskComponent = memo((props) => {
 
   // if type is changed from pomodoro to short break or long break, reset the active task 
   useEffect(() => {
-    if (id && (pomodoroType === "long_break" || pomodoroType === "short_break")) {
+    if ((id && id !== -1) && (pomodoroType === "long_break" || pomodoroType === "short_break")) {
       resetActiveTask();
+      setActiveTask(ACTIVE_TASK_DEFAULT)
     }
   }, [pomodoroType, id, resetActiveTask])
 
-
+  useEffect(() => {
+    if (id === -1) {
+      if (pomodoroType === 'pomodoro') {
+        setActiveTask(task => ({ ...task, timeLeft: 1500 }));
+      } else if (pomodoroType === 'short_break') {
+        setActiveTask(task => ({ ...task, timeLeft: 300 }));
+      }
+      else if (pomodoroType === 'long_break') {
+        setActiveTask(task => ({ ...task, timeLeft: 900 }));
+      }
+    }
+  }, [pomodoroType, id]);
 
   // whenever there is no active task, i.e. a task from the grid is not active, then default to pomodoro option
   useEffect(() => {
@@ -43,7 +56,7 @@ const MainTaskComponent = memo((props) => {
     }
   }, [activeTaskId])
 
-  const value = { timeLeft, id, task, timerStarted, completed };
+  const value = { timeLeft, id, timerStarted };
   return (<div className="main-task-background" style={{ backgroundColor: themes[pomodoroType].background }} >
     <div className="main-task-container">
       <TaskTypeComponent timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
