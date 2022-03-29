@@ -6,7 +6,7 @@ import reducer from "../reducers/reducer";
 export const PomodoroContext = createContext();
 
 const initialState = {
-    rowData: [],
+    tasks: [],
     activeTaskId: -1
 };
 
@@ -26,7 +26,7 @@ const init = (initial) => {
 export const PomodoroProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState, init);
 
-    const { rowData, activeTaskId } = state;
+    const { tasks, activeTaskId } = state;
     const startTimer = useCallback(({ id }) => {
         dispatch({
             type: START_TIMER,
@@ -93,7 +93,7 @@ export const PomodoroProvider = ({ children }) => {
         })
     }, [dispatch])
 
-    const actions = { rowData, activeTaskId, startTimer, stopTimer, addTask, persistSeconds, markAsComplete, deletePomodoro, resetActiveTask };
+    const actions = { tasks, activeTaskId, startTimer, stopTimer, addTask, persistSeconds, markAsComplete, deletePomodoro, resetActiveTask };
 
     return (<PomodoroContext.Provider value={actions}>
         {children}

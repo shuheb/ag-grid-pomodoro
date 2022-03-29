@@ -11,7 +11,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 function Grid(props) {
     const { themes } = props;
-    const { rowData } = useContext(PomodoroContext);
+    const { tasks } = useContext(PomodoroContext);
 
     const formatDateIntoMinutesAndSeconds = ({ value, data }) => (value && data.timeLeft) ? serialiseDate(value) : value;
 
@@ -133,18 +133,18 @@ function Grid(props) {
             <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
                 <AgGridReact
                     ref={props.gridRef}
-                    rowData={rowData}
+                    rowData={tasks.map(task => ({...task}))}
                     columnTypes={columnTypes}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
-                    immutableData={true}
+                    getRowId={({ data }) => data.id}
                     fullWidthCellRenderer={AddTaskCellRenderer}
                     isFullWidthCell={(node) => node.rowPinned === 'bottom'}
                     getRowStyle={getRowStyle}
                     animateRows={true}
+                    overlayNoRowsTemplate={'<span class="ag-overlay-no-rows-center">No Tasks To Show. Add Tasks using the Toolbar below.</span>'}
                     overlayLoadingTemplate={`<span class="ag-overlay-loading-center">Please stop the timer before clicking an action.</span>`}
                     postSort={postSort}
-                    getRowNodeId={data => data.id}
                     getRowHeight={(params) => params.node.rowPinned === 'bottom' ? 82 : 60}
                     pinnedBottomRowData={[{}]}
                 >

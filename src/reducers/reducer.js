@@ -4,14 +4,15 @@ const reducer = (state = {}, action) => {
     switch (action.type) {
         case START_TIMER:
             return {
-                ...state, activeTaskId: action.payload.id, rowData: state.rowData.map(row => {
+                tasks: state.tasks.map(row => {
                     if (row.id !== action.payload.id) return row;
                     return { ...row, timerStarted: true };
-                })
+                }),
+                activeTaskId: action.payload.id,
             };
         case STOP_TIMER:
             return {
-                ...state, rowData: state.rowData.map(row => {
+                ...state, tasks: state.tasks.map(row => {
                     if (row.id !== action.payload.id) return row;
                     return { ...row, timerStarted: false }
                 })
@@ -19,7 +20,7 @@ const reducer = (state = {}, action) => {
         case ADD_TASK:
             return {
                 ...state,
-                rowData: [...state.rowData, {
+                tasks: [...state.tasks, {
                     id: action.payload.id,
                     task: action.payload.task,
                     taskNo: action.payload.taskNo,
@@ -30,17 +31,17 @@ const reducer = (state = {}, action) => {
                 }]
             }
         case DELETE_POMODORO:
-            return { ...state, activeTaskId: -1, rowData: state.rowData.filter((row) => row.id !== action.payload.id) };
+            return { tasks: state.tasks.filter((row) => row.id !== action.payload.id), activeTaskId: -1 };
         case MARK_AS_COMPLETE:
             return {
-                ...state, rowData: state.rowData.map(row => {
+                ...state, tasks: state.tasks.map(row => {
                     if (row.id !== action.payload.id) return row;
                     return { ...row, completed: true, timeLeft: 0 }
                 })
             };
         case PERSIST_SECONDS:
             return {
-                ...state, rowData: state.rowData.map(row => {
+                ...state, tasks: state.tasks.map(row => {
                     if (row.id !== action.payload.id) return row;
                     return { ...row, timeLeft: action.payload.timeLeft }
                 })
