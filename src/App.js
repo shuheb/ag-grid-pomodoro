@@ -1,10 +1,13 @@
 import './App.css';
 import MainTaskComponent from './components/MainTaskComponent';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { PomodoroProvider } from './context/PomodoroContext';
-import SaveLocalStorageButton from './components/SaveButton';
+import SaveButton from './components/SaveButton';
+import Grid from './components/Grid';
 
 const App = () => {
+  const gridRef = useRef(null);
+
   const themes = useMemo(() => ({
     pomodoro: {
       foreground: '#ffffff',
@@ -26,13 +29,13 @@ const App = () => {
   }), []);
 
   return (
-    <div style={{ height: '100%', width: '100%' }}>
+    <>
       <PomodoroProvider>
         <MainTaskComponent themes={themes} />
-
-        <SaveLocalStorageButton themes={themes} />
+        <Grid gridRef={gridRef} themes={themes} />
+        <SaveButton gridRef={gridRef} />
       </PomodoroProvider>
-    </div>
+    </>
   );
 }
 

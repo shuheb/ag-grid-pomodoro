@@ -2,18 +2,16 @@ import React, { useContext, memo } from 'react';
 import { PomodoroContext } from '../context/PomodoroContext';
 import { Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { useRef } from "react";
-import Grid from "./Grid";
 
-const SaveLocalStorageButton = memo(props => {
-    const { rowData, activeTaskId } = useContext(PomodoroContext);
+const SaveButton = memo(props => {
+    const { tasks, activeTaskId } = useContext(PomodoroContext);
 
     // grab reference to the grid so that the component can access the Grid API
-    const gridRef = useRef();
+    const { gridRef } = props;
 
     const saveHandler = () => {
         if (activeTaskId) {
-            let activeTask = rowData.filter(row => row.id === activeTaskId);
+            let activeTask = tasks.filter(row => row.id === activeTaskId);
             if (activeTask.length > 0) {
                 if (activeTask[0].timerStarted) {
                     gridRef.current.api.showLoadingOverlay();
@@ -24,12 +22,10 @@ const SaveLocalStorageButton = memo(props => {
                 }
             }
         }
-        localStorage.setItem('gridState', JSON.stringify({ rowData, activeTaskId }))
+        localStorage.setItem('gridState', JSON.stringify({ tasks, activeTaskId }))
     }
 
-    return (<>
-        <Grid gridRef={gridRef} themes={props.themes} />
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    return (<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom:'20px' }}>
             <Button
                 variant="contained"
                 size='large'
@@ -41,7 +37,7 @@ const SaveLocalStorageButton = memo(props => {
                 Save to Local Storage
             </Button>
         </div>
-    </>)
+    )
 })
 
-export default SaveLocalStorageButton;
+export default SaveButton;

@@ -1,28 +1,25 @@
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { formatSecondsIntoMinutesAndSeconds } from '../../utils/date';
 import useTimer from '../../utils/useTimer';
 import EndTimeComponent from './EndTimeComponent';
 
 const TaskTimerComponent = memo((props) => {
-  const { pomodoroType, stopTimer, startTimer, theme } = props;
-  const { timeLeft, id, timerStarted } = props.value;
+  const { pomodoroType, stopTimer, startTimer, theme, timeLeft, id, timerStarted } = props;
   const [stateTimerStarted, setStateTimerStarted] = useState(timerStarted);
-  const [seconds, setSeconds] = useTimer(stateTimerStarted, timeLeft);
+
+  const callback = useCallback(() => {
+    setStateTimerStarted(false);
+  }, []);
+
+  const [seconds, setSeconds] = useTimer(stateTimerStarted, timeLeft, callback);
 
   useEffect(() => {
     setStateTimerStarted(timerStarted)
   }, [timerStarted]);
 
   useEffect(() => {
-    setSeconds(prev => timeLeft);
-  }, [timeLeft, setSeconds])
-
-  // when the timer reaches 0, set stateTimerStarted=false, so that the timer will stop
-  useEffect(() => {
-    if (seconds === 0) {
-      setStateTimerStarted(false);
-    }
-  }, [seconds])
+    setSeconds(timeLeft);
+  }, [id, timeLeft, setSeconds])
 
   const timerString = formatSecondsIntoMinutesAndSeconds(seconds);
   return (

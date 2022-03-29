@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { useEffect, memo, useContext } from 'react';
+import { useEffect, memo, useContext, useCallback } from 'react';
 import { PomodoroContext } from '../../context/PomodoroContext';
 import { formatSecondsIntoMinutesAndSeconds } from '../../utils/date';
 import useTimer from '../../utils/useTimer';
@@ -9,22 +9,20 @@ import useTimer from '../../utils/useTimer';
 const TimerCellRenderer = memo(props => {
   const { stopTimer, persistSeconds, markAsComplete } = useContext(PomodoroContext);
   const { id, timerStarted, timeLeft } = props.node.data;
-  const [seconds] = useTimer(timerStarted, timeLeft);
-  
+
+  const callback = useCallback(() => {
+    stopTimer({ id });
+    markAsComplete({ id })
+  }, [id, markAsComplete, stopTimer]);
+
+  const [seconds] = useTimer(timerStarted, timeLeft, callback);
+
   useEffect(() => {
     if (!timerStarted) {
       persistSeconds({ id, timeLeft: seconds })
     };
   }, [timerStarted, persistSeconds, seconds, id]);
 
-  useEffect(() => {
-    if (seconds === 0) {
-      stopTimer({ id });
-      markAsComplete({ id });
-    }
-  }, [seconds, stopTimer, markAsComplete, id])
-
-  // format the seconds into minutes and seconds
   let timeString = formatSecondsIntoMinutesAndSeconds(seconds);
 
   return (<>

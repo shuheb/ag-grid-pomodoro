@@ -4,10 +4,10 @@ import TaskTypeComponent from './task-components/TaskTypeComponent';
 import TaskDetailsComponent from './task-components/TaskDetailsComponent';
 import TaskTimerComponent from './task-components/TaskTimerComponent';
 
-const ACTIVE_TASK_DEFAULT = { id: -1, timeLeft: 1400, timerStarted: false }
+const ACTIVE_TASK_DEFAULT = { id: -1, timeLeft: 1500, timerStarted: false }
 
 const MainTaskComponent = memo((props) => {
-  const { activeTaskId, rowData, resetActiveTask, stopTimer, startTimer } = useContext(PomodoroContext);
+  const { activeTaskId, tasks, resetActiveTask, stopTimer, startTimer } = useContext(PomodoroContext);
   const [activeTask, setActiveTask] = useState(ACTIVE_TASK_DEFAULT);
   const [pomodoroType, setPomodoroType] = useState('pomodoro');
   const { timeLeft, id, task, taskNo, taskCount, timerStarted, completed } = activeTask;
@@ -15,11 +15,11 @@ const MainTaskComponent = memo((props) => {
   // if there is an active task, i.e. the timer is running, then store the data inside the activeTask hook
   useEffect(() => {
     if (activeTaskId !== -1) {
-      setActiveTask(rowData.filter(row => row.id === activeTaskId)[0])
+      setActiveTask(tasks.filter(row => row.id === activeTaskId)[0])
     } else {
 
     }
-  }, [activeTaskId, rowData]);
+  }, [activeTaskId, tasks]);
 
   // when task is completed i.e. timer has reached 0 seconds or via button, show the short break option
   useEffect(() => {
@@ -56,12 +56,11 @@ const MainTaskComponent = memo((props) => {
     }
   }, [activeTaskId])
 
-  const value = { timeLeft, id, timerStarted };
   return (<div className="main-task-background" style={{ backgroundColor: themes[pomodoroType].background }} >
     <div className="main-task-container">
       <TaskTypeComponent timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
       <TaskDetailsComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task ? `${task} (${taskNo}/${taskCount})` : undefined} />
-      <TaskTimerComponent value={value} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} theme={themes[pomodoroType]} />
+      <TaskTimerComponent timeLeft={timeLeft} id={id} timerStarted={timerStarted} pomodoroType={pomodoroType} stopTimer={stopTimer} startTimer={startTimer} theme={themes[pomodoroType]} />
     </div>
 
   </div>)
