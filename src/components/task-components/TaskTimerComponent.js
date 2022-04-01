@@ -4,7 +4,7 @@ import useTimer from '../../utils/useTimer';
 import EndTimeComponent from './EndTimeComponent';
 
 const TaskTimerComponent = memo((props) => {
-  const { pomodoroType, stopTimer, startTimer, theme, timeLeft, id, timerStarted } = props;
+  const { pomodoroType, theme, timeLeft, id, timerStarted } = props;
   const [stateTimerStarted, setStateTimerStarted] = useState(timerStarted);
 
   const callback = useCallback(() => {
@@ -29,10 +29,8 @@ const TaskTimerComponent = memo((props) => {
         buttonColor={theme.background}
         timerStarted={stateTimerStarted}
         setTimerStarted={(prev) => setStateTimerStarted(prev)}
-        stopTimer={stopTimer}
         id={id}
         timeLeft={timeLeft}
-        startTimer={startTimer}
         pomodoroType={pomodoroType} />
     </div>
   )

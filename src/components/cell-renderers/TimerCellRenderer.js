@@ -7,21 +7,21 @@ import useTimer from '../../utils/useTimer';
 
 
 const TimerCellRenderer = memo(props => {
-  const { stopTimer, persistSeconds, markAsComplete } = useContext(PomodoroContext);
+  const { dispatch, activeTaskId } = useContext(PomodoroContext);
   const { id, timerStarted, timeLeft } = props.node.data;
 
   const callback = useCallback(() => {
-    stopTimer({ id });
-    markAsComplete({ id })
-  }, [id, markAsComplete, stopTimer]);
+    dispatch({ type: 'stopped_timer', id })
+    dispatch({ type: 'completed_task', id })
+  }, [id, dispatch]);
 
   const [seconds] = useTimer(timerStarted, timeLeft, callback);
 
   useEffect(() => {
-    if (!timerStarted) {
-      persistSeconds({ id, timeLeft: seconds })
+    if (!timerStarted && activeTaskId !== -1) {
+      dispatch({ type: 'saved_progress', id, timeLeft: seconds });
     };
-  }, [timerStarted, persistSeconds, seconds, id]);
+  }, [timerStarted, dispatch, seconds, id, activeTaskId]);
 
   let timeString = formatSecondsIntoMinutesAndSeconds(seconds);
 

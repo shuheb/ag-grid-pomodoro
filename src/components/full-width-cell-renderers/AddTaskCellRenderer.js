@@ -2,9 +2,10 @@ import React, { useContext, memo, useState } from 'react';
 import { PomodoroContext } from '../../context/PomodoroContext';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import { Box, MenuItem, Button, TextField } from '@mui/material';
+import { v4 as generateId } from 'uuid';
 
 const AddTaskCellRenderer = memo((props) => {
-    const { addTask } = useContext(PomodoroContext);
+    const { dispatch } = useContext(PomodoroContext);
     const [pomodoroCount, setPomodoroCount] = useState(1);
     const [task, setTask] = useState("");
     const [error, setError] = useState(false);
@@ -15,7 +16,7 @@ const AddTaskCellRenderer = memo((props) => {
             setError(true)
         } else {
             for (let i = 0; i < pomodoroCount; i++) {
-                addTask({ task, taskNo: i + 1, taskCount: pomodoroCount })
+                dispatch({ type: 'added_task', id: generateId(), task, taskNo: i + 1, taskCount: pomodoroCount });
             };
             setError(false)
         }

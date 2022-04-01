@@ -7,14 +7,14 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 
 const ActionCellRenderer = memo((props) => {
-    const { startTimer, stopTimer, rowData, deletePomodoro, markAsComplete } = useContext(PomodoroContext);
+    const { dispatch, rowData } = useContext(PomodoroContext);
     const { timerStarted, id, timeLeft, completed, } = props.node.data;
     // start and stop the timer for the active task
     const toggleTimer = () => {
         if (timerStarted) {
-            stopTimer({ id, timeLeft });
+            dispatch({ type: 'stopped_timer', id, timeLeft })
         }
-        else { startTimer({ id }) }
+        else { dispatch({ type: 'started_timer', id }); }
     }
 
     // dispatch an action to mark the active task as complete
@@ -27,7 +27,7 @@ const ActionCellRenderer = memo((props) => {
             }, 3000)
             return;
         }
-        markAsComplete({ id })
+        dispatch({ type: 'completed_task', id });
     }
 
     // dispatch an action to delete active task
@@ -40,8 +40,8 @@ const ActionCellRenderer = memo((props) => {
                 props.api.hideOverlay();
             }, 3000)
             return;
-        }
-        deletePomodoro({ id })
+        };
+        dispatch({ type: 'deleted_task', id });
     }
 
     // button is disabled if there exists a timer running for a task

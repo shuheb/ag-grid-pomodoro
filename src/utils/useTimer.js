@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 
-const useTimer = (timerStarted, initialSeconds, cb) => {
+const useTimer = (timerStarted, initialSeconds, callback) => {
 
     const [seconds, setSeconds] = useState(initialSeconds);
 
     useEffect(() => {
-
         let timer;
-
         if (seconds === 0) {
-            cb();
+            callback();
         } else {
-
             if (timerStarted) {
                 timer = setInterval(() => {
                     // decrement timer every second
@@ -26,10 +23,9 @@ const useTimer = (timerStarted, initialSeconds, cb) => {
             if (timer) { clearInterval(timer); };
         }
 
-    }, [timerStarted, seconds, cb]);
+    }, [timerStarted, seconds, callback]);
 
     return [seconds, setSeconds];
-
 };
 
 export default useTimer;

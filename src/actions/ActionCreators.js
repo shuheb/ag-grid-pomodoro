@@ -1,7 +1,0 @@
-export const START_TIMER = 'START_TIMER';
-export const STOP_TIMER = 'STOP_TIMER';
-export const ADD_TASK = 'ADD_TASK';
-export const PERSIST_SECONDS = 'PERSIST_SECONDS'
-export const RESET_ACTIVE_TASK ='RESET_ACTIVE_TASK'
-export const MARK_AS_COMPLETE = 'MARK_AS_COMPLETE';
-export const DELETE_POMODORO = 'DELETE_POMODORO';
