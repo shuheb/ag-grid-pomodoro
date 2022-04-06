@@ -12,7 +12,7 @@ const ActionCellRenderer = memo((props) => {
     // start and stop the timer for the active task
     const toggleTimer = () => {
         if (timerStarted) {
-            dispatch({ type: 'stopped_timer', id, timeLeft })
+            dispatch({ type: 'stopped_timer', id, timeLeft });
         }
         else { dispatch({ type: 'started_timer', id }); }
     }

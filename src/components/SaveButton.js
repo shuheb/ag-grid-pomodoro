@@ -22,7 +22,8 @@ const SaveButton = memo(props => {
                 }
             }
         }
-        localStorage.setItem('gridState', JSON.stringify({ tasks, activeTaskId }))
+        localStorage.setItem('gridState', JSON.stringify({ tasks, activeTaskId }));
+        alert('Saved Grid State to Local Storage!')
     }
 
     return (<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom:'20px' }}>

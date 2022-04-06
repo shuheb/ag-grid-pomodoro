@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
-const useTimer = (timerStarted, initialSeconds, callback) => {
+const useTimer = (timerStarted, initialSeconds, taskCompletedCallback) => {
 
     const [seconds, setSeconds] = useState(initialSeconds);
 
     useEffect(() => {
         let timer;
-        if (seconds === 0) {
-            callback();
-        } else {
-            if (timerStarted) {
+
+        if (timerStarted) {
+            if (seconds === 0) {
+                taskCompletedCallback()
+            } else if (seconds > 0) {
                 timer = setInterval(() => {
-                    // decrement timer every second
                     // could have used setSeconds(prev => prev - 1) and removed the seconds dependency
                     // but this can lead to the timers being out of sync
                     setSeconds(seconds - 1)
@@ -23,7 +23,7 @@ const useTimer = (timerStarted, initialSeconds, callback) => {
             if (timer) { clearInterval(timer); };
         }
 
-    }, [timerStarted, seconds, callback]);
+    }, [timerStarted, seconds, taskCompletedCallback]);
 
     return [seconds, setSeconds];
 };

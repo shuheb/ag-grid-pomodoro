@@ -43,7 +43,7 @@ const AddTaskCellRenderer = memo((props) => {
                 <TextField
                     id="outlined-basic"
                     required
-                    name='noAutoFill'
+                    autoComplete="off"
                     label="I'm working on..."
                     size="small"
                     variant="outlined"

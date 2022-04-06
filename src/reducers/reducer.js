@@ -15,7 +15,7 @@ const reducer = (state = {}, action) => {
             return {
                 ...state, tasks: state.tasks.map(row => {
                     if (row.id !== action.id) return row;
-                    return { ...row, timerStarted: false }
+                    return { ...row, timerStarted: false, timeLeft: action.timeLeft }
                 })
             }
         case 'added_task':
@@ -37,16 +37,9 @@ const reducer = (state = {}, action) => {
             return {
                 ...state, tasks: state.tasks.map(row => {
                     if (row.id !== action.id) return row;
-                    return { ...row, completed: true, timeLeft: 0 }
+                    return { ...row, completed: true, timerStarted: false, timeLeft: 0 }
                 })
             };
-        case 'saved_progress':
-            return {
-                ...state, tasks: state.tasks.map(row => {
-                    if (row.id !== action.id) return row;
-                    return { ...row, timeLeft: action.timeLeft }
-                })
-            }
         case 'resetted_active_task':
             return { ...state, activeTaskId: -1 }
         default:

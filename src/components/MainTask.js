@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext, memo } from 'react';
 import { PomodoroContext } from '../context/PomodoroContext';
-import TaskTypeComponent from './task-components/TaskTypeComponent';
-import TaskDetailsComponent from './task-components/TaskDetailsComponent';
-import TaskTimerComponent from './task-components/TaskTimerComponent';
+import TaskType from './task-components/TaskType';
+import TaskDetails from './task-components/TaskDetails';
+import TaskTimer from './task-components/TaskTimer';
 
 const ACTIVE_TASK_DEFAULT = { id: -1, timeLeft: 1500, timerStarted: false }
 
-const MainTaskComponent = memo((props) => {
+const MainTask = memo((props) => {
   const { activeTaskId, tasks, dispatch } = useContext(PomodoroContext);
   const [activeTask, setActiveTask] = useState(ACTIVE_TASK_DEFAULT);
   const [pomodoroType, setPomodoroType] = useState('pomodoro');
@@ -31,7 +31,7 @@ const MainTaskComponent = memo((props) => {
   // if type is changed from pomodoro to short break or long break, reset the active task 
   useEffect(() => {
     if ((id && id !== -1) && (pomodoroType === "long_break" || pomodoroType === "short_break")) {
-      dispatch({type:'resetted_active_task'})
+      dispatch({ type: 'resetted_active_task' })
       setActiveTask(ACTIVE_TASK_DEFAULT)
     }
   }, [pomodoroType, id, dispatch])
@@ -58,11 +58,11 @@ const MainTaskComponent = memo((props) => {
 
   return (<div className="main-task-background" style={{ backgroundColor: themes[pomodoroType].background }} >
     <div className="main-task-container">
-      <TaskTypeComponent timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
-      <TaskDetailsComponent pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task ? `${task} (${taskNo}/${taskCount})` : undefined} />
-      <TaskTimerComponent timeLeft={timeLeft} id={id} timerStarted={timerStarted} pomodoroType={pomodoroType} theme={themes[pomodoroType]} />
+      <TaskType timerStarted={timerStarted} pomodoroType={pomodoroType} setPomodoroType={(type) => setPomodoroType(type)} />
+      <TaskDetails pomodoroType={pomodoroType} id={id} theme={themes[pomodoroType]} task={task ? `${task} (${taskNo}/${taskCount})` : undefined} />
+      <TaskTimer timeLeft={timeLeft} id={id} timerStarted={timerStarted} pomodoroType={pomodoroType} theme={themes[pomodoroType]} />
     </div>
 
   </div>)
 })
-export default MainTaskComponent;
+export default MainTask;

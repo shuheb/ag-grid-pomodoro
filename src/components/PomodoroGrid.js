@@ -1,15 +1,14 @@
-
 import React, { useContext, useCallback, useMemo } from 'react';
 import '../App.css';
 import { AgGridReact } from 'ag-grid-react';
 import ActionCellRenderer from './cell-renderers/ActionCellRenderer';
-import TimerCellRenderer from './cell-renderers/TimerCellRenderer';
+import ProgressCellRenderer from './cell-renderers/ProgressCellRenderer';
 import { PomodoroContext } from '../context/PomodoroContext';
 import AddTaskCellRenderer from './full-width-cell-renderers/AddTaskCellRenderer';
 import { serialiseDate } from '../utils/date';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-function Grid(props) {
+const PomodoroGrid = props => {
     const { themes } = props;
     const { tasks } = useContext(PomodoroContext);
 
@@ -44,9 +43,7 @@ function Grid(props) {
             field: "action",
             maxWidth: 200,
             type: 'grayColumn',
-            cellRendererSelector: ({ data }) => {
-                return data.task ? { component: ActionCellRenderer } : undefined;
-            },
+            cellRenderer: ActionCellRenderer,
             pinned: 'left'
         },
         {
@@ -67,10 +64,7 @@ function Grid(props) {
             minWidth: 200,
             valueGetter: ({ data }) => data.timeLeft,
             sort: 'asc',
-            cellRendererSelector: ({ data }) => {
-                return data.task ? { component: TimerCellRenderer, params: {} } : undefined;
-            },
-
+            cellRenderer: ProgressCellRenderer,
         },
         {
             headerName: "Start Time",
@@ -103,6 +97,8 @@ function Grid(props) {
 
     const defaultColDef = useMemo(() => ({ flex: 1, suppressMovable: true, minWidth: 100 }), []);
 
+    const pinnedBottomRowData = useMemo(() => ([{}]), []);
+
     const getRowStyle = useCallback(params => {
         const { completed } = params.data;
         if (!params.node.isRowPinned()) {
@@ -126,34 +122,41 @@ function Grid(props) {
                 nextInsertPos++;
             }
         }
-    }, [])
+    }, []);
+
+    const isFullWidthCell = useCallback((node) => node.rowPinned === 'bottom', [])
+
+    const getRowId = useCallback(({ data }) => data.id, []);
+
+    const getRowHeight = useCallback((params) => params.node.rowPinned === 'bottom' ? 82 : 60, []);
 
     return (
         <div style={{ height: '50%', width: '100%' }}>
-            <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
-                <AgGridReact
-                    ref={props.gridRef}
-                    rowData={tasks.map(task => ({...task}))}
-                    columnTypes={columnTypes}
-                    columnDefs={columnDefs}
-                    defaultColDef={defaultColDef}
-                    getRowId={({ data }) => data.id}
-                    fullWidthCellRenderer={AddTaskCellRenderer}
-                    isFullWidthCell={(node) => node.rowPinned === 'bottom'}
-                    getRowStyle={getRowStyle}
-                    animateRows={true}
-                    overlayNoRowsTemplate={'<span class="ag-overlay-no-rows-center">No Tasks To Show. Add Tasks using the Toolbar below.</span>'}
-                    overlayLoadingTemplate={`<span class="ag-overlay-loading-center">Please stop the timer before clicking an action.</span>`}
-                    postSort={postSort}
-                    getRowHeight={(params) => params.node.rowPinned === 'bottom' ? 82 : 60}
-                    pinnedBottomRowData={[{}]}
-                >
-                </AgGridReact>
-            </div>
+            <AgGridReact
+                className="ag-theme-alpine"
+                style={{ height: '100%', width: '100%' }}
+                ref={props.gridRef}
+                columnDefs={columnDefs}
+                rowData={tasks.map(task => ({ ...task }))}
+                pinnedBottomRowData={pinnedBottomRowData}
+                columnTypes={columnTypes}
+                defaultColDef={defaultColDef}
+                getRowId={getRowId}
+                getRowHeight={getRowHeight}
+                getRowStyle={getRowStyle}
+                postSort={postSort}
+                isFullWidthCell={isFullWidthCell}
+                fullWidthCellRenderer={AddTaskCellRenderer}
+                animateRows={true}
+                overlayNoRowsTemplate={'<span class="ag-overlay-no-rows-center">No Tasks To Show. Add Tasks using the Toolbar below.</span>'}
+                overlayLoadingTemplate={`<span class="ag-overlay-loading-center">Please stop the timer before clicking an action.</span>`}
+                
+            >
+            </AgGridReact>
         </div>
     );
 }
 
 
 
-export default Grid;
+export default PomodoroGrid;

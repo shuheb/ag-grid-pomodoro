@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-const TaskDetailsComponent = memo((props) => {
+const TaskDetails = memo((props) => {
 
     const { pomodoroType, theme, task } = props;
 
@@ -28,4 +28,4 @@ const TaskDetailsComponent = memo((props) => {
     </div >)
 });
 
-export default TaskDetailsComponent;
+export default TaskDetails;

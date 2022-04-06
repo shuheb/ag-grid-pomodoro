@@ -1,6 +1,6 @@
 import { Alert, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useState, memo } from 'react';
-const TaskTypeComponent = memo((props) => {
+const TaskType = memo((props) => {
 
   const { timerStarted, pomodoroType, setPomodoroType } = props;
   const [showAlert, setShowAlert] = useState(false);
@@ -39,4 +39,4 @@ const TaskTypeComponent = memo((props) => {
 
 });
 
-export default TaskTypeComponent;
+export default TaskType;

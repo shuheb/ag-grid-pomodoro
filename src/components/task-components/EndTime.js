@@ -5,8 +5,8 @@ import StopIcon from '@mui/icons-material/Stop';
 import { serialiseDate } from '../../utils/date';
 import { PomodoroContext } from '../../context/PomodoroContext';
 
-const EndTimeComponent = memo((props) => {
-    const { pomodoroType, buttonColor, timerStarted, setTimerStarted, id, timeLeft } = props;
+const EndTime = memo((props) => {
+    const { pomodoroType, buttonColor, timerStarted, setTimerStarted, id, timeLeft, seconds } = props;
     const { dispatch } = useContext(PomodoroContext);
     const endTime = new Date();
     const endTimeDelta = pomodoroType === "pomodoro" ? timeLeft ? timeLeft : 1500 : pomodoroType === "short_break" ? 300 : 900;
@@ -26,7 +26,7 @@ const EndTimeComponent = memo((props) => {
             }}
             onClick={() => {
                 if (id !== -1) {
-                    timerStarted ? dispatch({ type: 'stopped_timer', id }) : dispatch({ type: 'started_timer', id })
+                    timerStarted ? dispatch({ type: 'stopped_timer', id, timeLeft: seconds }) : dispatch({ type: 'started_timer', id })
                 }
                 setTimerStarted(!timerStarted);
 
@@ -50,4 +50,4 @@ const EndTimeComponent = memo((props) => {
         </div></div>)
 });
 
-export default EndTimeComponent;
+export default EndTime;

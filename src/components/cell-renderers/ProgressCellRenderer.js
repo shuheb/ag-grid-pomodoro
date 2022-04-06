@@ -4,24 +4,21 @@ import { PomodoroContext } from '../../context/PomodoroContext';
 import { formatSecondsIntoMinutesAndSeconds } from '../../utils/date';
 import useTimer from '../../utils/useTimer';
 
-
-
-const TimerCellRenderer = memo(props => {
-  const { dispatch, activeTaskId } = useContext(PomodoroContext);
+const ProgressCellRenderer = memo(props => {
+  const { dispatch } = useContext(PomodoroContext);
   const { id, timerStarted, timeLeft } = props.node.data;
 
-  const callback = useCallback(() => {
-    dispatch({ type: 'stopped_timer', id })
+  const taskCompletedCallback = useCallback(() => {
     dispatch({ type: 'completed_task', id })
   }, [id, dispatch]);
 
-  const [seconds] = useTimer(timerStarted, timeLeft, callback);
+  const [seconds] = useTimer(timerStarted, timeLeft, taskCompletedCallback);
 
   useEffect(() => {
-    if (!timerStarted && activeTaskId !== -1) {
-      dispatch({ type: 'saved_progress', id, timeLeft: seconds });
-    };
-  }, [timerStarted, dispatch, seconds, id, activeTaskId]);
+    if (timerStarted) {
+      props.node.setData({ ...props.node.data, timeLeft: seconds })
+    }
+  }, [seconds, props.node, timerStarted])
 
   let timeString = formatSecondsIntoMinutesAndSeconds(seconds);
 
@@ -73,4 +70,4 @@ const ProgressComponent = memo(props => {
 });
 
 
-export default TimerCellRenderer;
+export default ProgressCellRenderer;

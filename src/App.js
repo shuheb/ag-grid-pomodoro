@@ -1,9 +1,9 @@
 import './App.css';
-import MainTaskComponent from './components/MainTaskComponent';
+import MainTask from './components/MainTask';
 import { useMemo, useRef } from 'react';
 import { PomodoroProvider } from './context/PomodoroContext';
 import SaveButton from './components/SaveButton';
-import Grid from './components/Grid';
+import PomodoroGrid from './components/PomodoroGrid';
 
 const App = () => {
   const gridRef = useRef(null);
@@ -31,8 +31,8 @@ const App = () => {
   return (
     <>
       <PomodoroProvider>
-        <MainTaskComponent themes={themes} />
-        <Grid gridRef={gridRef} themes={themes} />
+        <MainTask themes={themes} />
+        <PomodoroGrid gridRef={gridRef} themes={themes} />
         <SaveButton gridRef={gridRef} />
       </PomodoroProvider>
     </>
