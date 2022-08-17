@@ -7,17 +7,64 @@
 
 .main-task-container {
   background-color: rgba(255, 255, 255, 0.1);
-    padding: 30px 20px;
-    width: 400px;
-    border-radius: 10px;
-    margin: 40px 0px;
-    max-width: 620px;
+  padding: 30px 20px;
+  width: 400px;
+  border-radius: 10px;
+  margin: 40px 0px;
+  max-width: 620px;
+}
+
+.main-task-container>div:not(:first-child) {
+  margin-top: 16px;
 }
 
 .task-container {
   background-color: #fffffffa;
-    opacity: 1;
-    padding: 10px 10px;
-    border-radius: 10px;
-    text-align: left;
+  opacity: 1;
+  padding: 10px 10px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.task-container>span:first-child {
+  font-size: 30px;
+  padding-right: 5px;
+}
+
+.task-container>span:nth-child(2) {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.timer-label {
+  color: white;
+  font-weight: bold;
+  font-size: 90px;
+  padding: 30px 0px;
+}
+
+.end-timer-container {
+  display: flex;
+  padding-left: 15px;
+}
+
+.end-timer-container>button {
+  background-color: white;
+  font-weight: bold;
+}
+
+.end-timer-container>button:hover {
+  background-color: #00000014;
+  color: white
+}
+
+.end-timer-container>span:last-child {
+  margin-left: auto;
+  color: white;
+  font-size: 20px;
+}
+
+.end-timer-container>span>span {
+  font-weight: bold;
+  font-size: 30px;
 }

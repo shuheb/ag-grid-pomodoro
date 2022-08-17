@@ -23,8 +23,8 @@ const TaskTimer = memo((props) => {
 
   const timerString = formatSecondsIntoMinutesAndSeconds(seconds);
   return (
-    <div>
-      <div style={{ color: 'white', fontWeight: 'bold', fontSize: 90, padding: '30px 0px' }}>{timerString}</div>
+    <>
+      <div className='timer-label'>{timerString}</div>
       <EndTime
         buttonColor={theme.background}
         timerStarted={stateTimerStarted}
@@ -33,7 +33,7 @@ const TaskTimer = memo((props) => {
         timeLeft={timeLeft}
         seconds={seconds}
         pomodoroType={pomodoroType} />
-    </div>
+    </>
   )
 });
 
